@@ -1,0 +1,179 @@
+#!/bin/sh
+notmuch tag -inbox -unread tag:sent AND tag:inbox AND tag:unread
+unread=$(notmuch search tag:unread | wc -l)
+if [[ $unread -gt 0 ]];then
+    notify-send -a Mutt "New Mail" "$unread new emails"
+fi
+
+# apply filters
+
+notmuch tag +"Czech"                from:"vyuka@aspena.cz" OR \
+                                      to:"vyuka@aspena.cz" OR \
+                                      cc:"vyuka@aspena.cz"
+
+notmuch tag +"Czech/Expats"         from:"czech-expats@redhat.com" OR \
+                                      to:"czech-expats@redhat.com" OR \
+                                      cc:"czech-expats@redhat.com" OR \
+                                    from:"brno-expats@redhat.com" OR \
+                                      to:"brno-expats@redhat.com" OR \
+                                      cc:"brno-expats@redhat.com" OR \
+                                 subject:"[EXPATS"
+
+notmuch tag +"GSuite/Chat"          from:"chat-noreply@google.com"
+
+notmuch tag +"GSuite/Docs"          from:"drive-shares-dm-noreply@google.com" OR \
+                                    from:"comments-noreply@google.com" OR \
+                                    from:"comments-noreply@docs.google.com"
+
+notmuch tag +"GSuite/Events"     subject:"Invitation" OR \
+                                 subject:"Canceled event with note" OR \
+                                 subject:"Canceled event:" OR \
+                                 subject:"Updated invitation:" OR \
+                                 subject:"Accepted: " OR \
+                                 subject:"Declined: " OR \
+                                 subject:"Proposed new time: " OR \
+                                    from:"no-reply@misteryminds.com" OR \
+                                    from:"invite@bluejeans.com"
+
+notmuch tag +"GSuite/Forms"         from:"forms-receipts-noreply@google.com"
+
+notmuch tag +"Fedora"               from:"lists.fedoraproject.org" OR \
+                                      to:"lists.fedoraproject.org" OR \
+                                      cc:"lists.fedoraproject.org"
+
+notmuch tag +"Fedora/Devel"         from:"devel@lists.fedoraproject.org" OR \
+                                      to:"devel@lists.fedoraproject.org" OR \
+                                      cc:"devel@lists.fedoraproject.org"
+
+notmuch tag +"Fedora/Devel/Non Responsive" \
+                                 subject:"non responsive maintainer" OR \
+                                 subject:"non-responsive maintainer" OR \
+                                 subject:"Non Responsive maintainer" OR \
+                                 subject:"Non-Responsive maintainer" OR \
+                                 subject:"Non Responsive Maintainer" OR \
+                                 subject:"Non-Responsive Maintainer" OR \
+                                 subject:"non responsive packager" OR \
+                                 subject:"non-responsive packager" OR \
+                                 subject:"Non Responsive packager" OR \
+                                 subject:"Non-Responsive packager" OR \
+                                 subject:"Non Responsive Packager" OR \
+                                 subject:"Non-Responsive Packager"
+
+notmuch tag +"Fedora/Devel/Orphaning" \
+                                 subject:"orphaning" OR \
+                                 subject:"Orphaning" OR \
+                                 subject:"orphaned" OR \
+                                 subject:"Orphaned"
+
+notmuch tag +"Fedora/Devel/Report"  from:"compose report" OR \
+                                    from:"compose check report"
+
+notmuch tag +"Fedora/Devel/Test-Announce" \
+                                    from:"test-announce@lists.fedoraproject.org" OR \
+                                      to:"test-announce@lists.fedoraproject.org" OR \
+                                      cc:"test-announce@lists.fedoraproject.org" OR \
+                                 subject:"test-announce" OR \
+                                 subject:"Test-Announce"
+
+notmuch tag +"Fedora/Intro"      subject:"Introduction"
+
+notmuch tag +"Fedora/Notification"  from:"notifications@fedoraproject.org" OR \
+                                      to:"notifications@fedoraproject.org" OR \
+                                      cc:"notifications@fedoraproject.org"
+
+notmuch tag +"Learning"             from:"noreply@learning.redhat.com" OR \
+                                      to:"noreply@learning.redhat.com" OR \
+                                      cc:"noreply@learning.redhat.com" OR \
+                                    from:"rhu-help@redhat.com" OR \
+                                      to:"rhu-help@redhat.com" OR \
+                                      cc:"rhu-help@redhat.com"
+
+notmuch tag +"memo-list"            from:"memo-list@redhat.com" OR \
+                                      to:"memo-list@redhat.com" OR \
+                                      cc:"memo-list@redhat.com"
+
+notmuch tag +"memo-list/Announce"   from:"announce-list@redhat.com" OR \
+                                      to:"announce-list@redhat.com" OR \
+                                      cc:"announce-list@redhat.com"
+
+notmuch tag +"memo-list/Announce"   from:"czech-announce-list@redhat.com" OR \
+                                      to:"czech-announce-list@redhat.com" OR \
+                                      cc:"czech-announce-list@redhat.com"
+
+notmuch tag +"memo-list/Announce"   from:"emea-announce-list@redhat.com" OR \
+                                      to:"emea-announce-list@redhat.com" OR \
+                                      cc:"emea-announce-list@redhat.com"
+
+notmuch tag +"memo-list/Brno"       from:"brno-list@redhat.com" OR \
+                                      to:"brno-list@redhat.com" OR \
+                                      cc:"brno-list@redhat.com" OR \
+                                    from:"brno-memo-list@redhat.com" OR \
+                                      to:"brno-memo-list@redhat.com" OR \
+                                      cc:"brno-memo-list@redhat.com"
+
+notmuch tag +"memo-list/Corp"    subject:"Friday Five" OR \
+                                 subject:"Command Line Heroes Podcast ::" OR \
+                                 subject:"EMEA all-hands call" OR \
+                                 subject:"The EMEA Bulletin" OR \
+                                 subject:"Great Place to Work" OR \
+                                    from:"no-reply@getbambu.com" OR \
+                                    from:"digest@getbambu.com" OR \
+                                    from:"newsletter@getbambu.com" OR \
+                                    from:"noreply@source.redhat.com" OR \
+                                    from:"prod-dept@redhat.com" OR \
+                                      to:"customer-reference-helpdesk@redhat.com" OR \
+                                      to:"ticramer-all@redhat.com"
+
+notmuch tag +"memo-list/EMEA"       from:"no-reply@internal.engage.redhat.com" OR \
+                                      to:"no-reply@internal.engage.redhat.com" OR \
+                                      cc:"no-reply@internal.engage.redhat.com"
+
+notmuch tag +"memo-list/Outage"  subject:"outage" OR subject:"Outage"
+
+notmuch tag +"memo-list/WTSBR"   subject:"[WTS]" OR subject:"WTS" OR \
+                                 subject:"[WTB]" OR subject:"WTRent" OR \
+                                 subject:"[WTS/" OR subject:"[WTG]"
+
+notmuch tag +"Payroll"              from:"noreply@edenred.cz.prepaysolutions.com" OR \
+                                    from:"emea-payroll@redhat.com" OR \
+                                    from:"emea-benefits@redhat.com" OR \
+                                    from:"global-benefits@redhat.com" OR \
+                                    from:"virginpulse@mail.virginpulse.com" OR \
+                                    from:"absencesupport@redhat.com"
+
+notmuch tag +"Payroll/Workday"      from:"redhat@myworkday.com" OR \
+                                    from:"timetracking@redhat.com"
+
+notmuch tag +"SubSys"               from:"epic-list@redhat.com" OR \
+                                      to:"epic-list@redhat.com" OR \
+                                      cc:"epic-list@redhat.com" OR \
+                                    from:"linux-eng-org@redhat.com" OR \
+                                      to:"linux-eng-org@redhat.com" OR \
+                                      cc:"linux-eng-org@redhat.com" OR \
+                                    from:"prod-dept@redhat.com" OR \
+                                      to:"prod-dept@redhat.com" OR \
+                                      cc:"prod-dept@redhat.com" OR \
+                                    from:"rhel-announce@redhat.com" OR \
+                                      to:"rhel-announce@redhat.com" OR \
+                                      cc:"rhel-announce@redhat.com" OR \
+                                    from:"rhel-devel@redhat.com" OR \
+                                      to:"rhel-devel@redhat.com" OR \
+                                      cc:"rhel-devel@redhat.com"
+
+notmuch tag +"SubSys/Core Services" from:"core-services@redhat.com" OR \
+                                      to:"core-services@redhat.com" OR \
+                                      cc:"core-services@redhat.com"
+
+notmuch tag +"SubSys/Core Services/SWM" from:"rhel-cs-software-management-subsystem@redhat.com" OR \
+                                      to:"rhel-cs-software-management-subsystem@redhat.com" OR \
+                                      cc:"rhel-cs-software-management-subsystem@redhat.com" OR \
+                                    from:"swm-list@redhat.com" OR \
+                                      to:"swm-list@redhat.com" OR \
+                                      cc:"swm-list@redhat.com"
+
+notmuch tag +"Tickets"              from:"redhat@service-now.com"
+
+
+
+# remove read mail from inbox
+notmuch tag -inbox not tag:unread and not tag:flagged
