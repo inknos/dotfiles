@@ -1,0 +1,25 @@
+#!/bin/bash
+muttopen=$(ps -ef | grep '[m]utt$' | wc -l)
+echo $(date) "start"
+# if mutt is not open, continue
+if [ $muttopen -eq 0 ]; then
+    echo "mutt is closed"
+    echo $(date) "end"
+    exit
+fi
+
+echo $(date) "mbsync: pushing"
+/usr/bin/mbsync -q -a
+echo $(date) "mbsync: done"
+
+echo $(date) "imapfilter: go!"
+pushd ~/.imapfilter
+/usr/bin/imapfilter -c ~/.imapfilter/account-02.lua
+popd
+echo $(date) "imapfilter: done"
+
+echo $(date) "mbsync: pulling"
+/usr/bin/mbsync -q -a
+echo $(date) "mbsync: done"
+
+echo $(date) "end"
