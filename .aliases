@@ -53,3 +53,6 @@ alias ggii='alias | grep -i'
 
 # tldr
 alias tl='tldr'
+
+# dotfiles dir
+alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
