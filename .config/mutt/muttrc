@@ -62,7 +62,8 @@ set reverse_realname        = yes
 set wait_key                = no
 set delete                  = yes
 set pager_index_lines=20
-set index_format='$XDG_CONFIG_HOME/mutt/bin/mutt-format-time "%[%d %b %Y]" "%8[%a, %e %b]" "%11[%H:%m]" "%3C)  %Z  %-95.95s ~> %-30.30L %?y?[%-5.5y]& ? %?M?+& ?%%s %%" "%[%s]" |'
+# https://man.archlinux.org/man/strftime.3
+set index_format='$XDG_CONFIG_HOME/mutt/bin/mutt-format-time "%12[%d %b %Y]" "%12[%a, %e %b]" "%12[%a,  %H:%m]" "%12[Yd, %H:%m]" "%12[%H:%m]" "%3C)  %Z  %-95.95s ~> %-30.30L %?y?[%-5.5y]& ? %?M?+& ?%%s %%" "%[%s]" |'
 
 #########################################
 # Sidebar configuration (shows folders) #
@@ -77,7 +78,7 @@ set sidebar_folder_indent=yes
 set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
 set sidebar_delim_chars="/"
 set sidebar_divider_char=" | "
-set sidebar_use_mailbox_shortcuts=yes
+#set sidebar_use_mailbox_shortcuts=yes
 
 #######################
 # Sidebar keybindings #
@@ -98,6 +99,11 @@ bind index,pager \CP sidebar-prev
 bind index,pager \CD sidebar-page-down
 bind index,pager \CU sidebar-page-up
 bind index,pager \CO sidebar-open
+# https://gist.github.com/guiniol/5109c5bd953af950e0530b720507d704#file-muttrc-L110:L112
+bind index,pager \CJ sidebar-next
+bind index,pager \CK sidebar-prev
+bind index,pager \CL sidebar-open
+
 
 ###############
 # Spell check #
@@ -146,7 +152,7 @@ set crypt_replysignencrypted=yes
 #################################
 # Default account is 'redhat' #
 #################################
-source $XDG_CONFIG_HOME/mutt/accounts/account-02
+source $XDG_CONFIG_HOME/mutt/accounts/$NOTMUCH_PROFILE
 
 ################
 # Folder hooks #
@@ -188,14 +194,14 @@ bind attach,index G last-entry
 # just typing ':' and going from there.  To exit the key code reporter, press Ctrl+G
 #
 # NOTE: These macro keys do not work inside a tmux session.  Still looking for a fix for that.
-macro index <f2> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-00<enter><change-folder>!<enter>'
-macro index \121 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-00<enter><change-folder>!<enter>'
+#macro index <f2> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-00<enter><change-folder>!<enter>'
+#macro index \121 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-00<enter><change-folder>!<enter>'
 
-macro index <f3> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-01<enter><change-folder>!<enter>'
-macro index \122 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-01<enter><change-folder>!<enter>'
+#macro index <f3> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-01<enter><change-folder>!<enter>'
+#macro index \122 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-01<enter><change-folder>!<enter>'
 
-macro index <f4> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-02<enter><change-folder>!<enter>'
-macro index \123 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-02<enter><change-folder>!<enter>'
+#macro index <f4> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-02<enter><change-folder>!<enter>'
+#macro index \123 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/account-02<enter><change-folder>!<enter>'
 
 #macro index <f5> '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/redhat<enter><change-folder>!<enter'>
 #macro index \415 '<enter-command>source $XDG_CONFIG_HOME/mutt/accounts/redhat<enter><change-folder>!<enter'>

@@ -18,7 +18,7 @@ int main(int argc, const char *argv[]) {
     current_time = time(NULL);
 
     if (argc!=8) {
-        printf("Usage: %s old recent today format timestamp\n", argv[0]);
+        printf("Usage: %s old recent week yesterday today format timestamp\n", argv[0]);
         return 2;
     }
 
