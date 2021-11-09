@@ -177,4 +177,4 @@ notmuch tag +"Tickets"              from:"redhat@service-now.com"
 
 
 # remove read mail from inbox
-notmuch tag -inbox not tag:unread and not tag:flagged
+notmuch tag -inbox not tag:unread and not tag:new

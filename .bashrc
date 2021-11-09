@@ -133,7 +133,11 @@ tmux has-session -t "mail" 2>/dev/null
 if [ $? != 0 ]; then
     export XDG_CONFIG_HOME="$HOME/.config"
     export XDG_CACHE_HOME="$HOME/.cache"
-    tmux new-session -d -s mail /usr/bin/neomutt
+    tmux new-session -d -s mail
+    tmux new-window -t mail:1 -n outlook "NOTMUCH_PROFILE=outlook /usr/bin/neomutt"
+    tmux new-window -t mail:2 -n disroot "NOTMUCH_PROFILE=disroot /usr/bin/neomutt"
+    tmux kill-window -t mail:0
+    tmux new-window -t mail:0 -n redhat "NOTMUCH_PROFILE=redhat /usr/bin/neomutt"
 fi
 
 # start new session telegram if no session exist

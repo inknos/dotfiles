@@ -10,6 +10,7 @@
 int main(int argc, const char *argv[]) {
     time_t current_time;
     time_t message_time;
+    struct tm *tm;
 
     const char *old, *recent, *today, *week, *yesterday;
     const char *format;
@@ -31,23 +32,16 @@ int main(int argc, const char *argv[]) {
 
     message_time = atoi(argv[7]);
 
-    /*
-    if ((message_time/YEAR) < (current_time/YEAR)) {
-        printf(format, old);
-    } else if ((message_time/DAY) < (current_time/DAY)) {
-        printf(format, recent);
-    } else if ((message_time/WEEK) < (current_time/WEEK)) {
-        printf(format, week);
-    } else if ((message_time/YESTERDAY) < (current_time/YESTERDAY)) {
-        printf(format, yesterday);
-    } else {
-        printf(format, today);
+    if ((tm = localtime (&current_time)) == NULL) {
+        printf("Error\n");
+        return 1;
     }
-*/
 
-    if ((current_time - message_time) < DAY) {
+    unsigned int TODAY = tm->tm_mday*3600 + tm->tm_hour*60 + tm->tm_sec;
+
+    if ((current_time - message_time) < TODAY) {
         printf(format, today);
-    } else if ((current_time - message_time) < YESTERDAY) {
+    } else if ((current_time - message_time) < DAY+TODAY) {
         printf(format, yesterday);
     } else if ((current_time - message_time) < WEEK) {
         printf(format, week);

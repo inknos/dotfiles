@@ -5,16 +5,13 @@
 
 unmailboxes *
 unvirtual-mailboxes *
+setenv NOTMUCH_PROFILE disroot
 
 set status_format="---[ Folder: %f ]---[ %r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)?%?p? ( %p postponed )? ]---%>-[ $my_email_01 ]---"
 
 # Receive
-#set imap_authenticators = "gssapi:cram-md5:login"
-set imap_user = $my_email_01
-#set imap_pass = $my_imap_pass_01
 set mbox_type = Maildir
-set folder = "~/Mail/Disroot"
-#set folder = "imaps://$my_email_01@disroot.org:993"
+set folder = "~/Mail/Disroot/INBOX"
 
 set nm_default_uri="notmuch:///home/nsella/Mail/Disroot/INBOX" # path to the maildir
 set virtual_spoolfile=yes
