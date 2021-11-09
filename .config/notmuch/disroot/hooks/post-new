@@ -1,0 +1,6 @@
+#!/bin/sh
+unread=$(notmuch search tag:unread | wc -l)
+if [[ $unread -gt 0 ]];then
+    notify-send -a Mutt "New mail on $NOTMUCH_PROFILE" "$unread new emails"
+fi
+

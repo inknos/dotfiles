@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 #export NOTMUCH_CONFIG=/home/<username>/.config/notmuch/notmuchrc
 #export NMBGIT=/home/<username>/.local/share/notmuch/nmbug
-notmuch new
+export NOTMUCH_PROFILE=redhat; notmuch new
