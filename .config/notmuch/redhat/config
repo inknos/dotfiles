@@ -49,7 +49,7 @@ path=/home/nsella/Mail/RedHat
 #
 
 [new]
-tags=new;
+tags=inbox;unread;
 ignore=/.*[.](json|lock|bak)$/
 
 # Search configuration

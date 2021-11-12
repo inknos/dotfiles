@@ -17,9 +17,9 @@ color tree		    color5  	default
 
 # message index ------ foreground ---- background -----------------------------
 color index		bold color3     default	    ~F # flagged messages
-color index		bold color6     default 	~N # new messages
 color index		bold color4     default 	~O # unread not new messages
 color index		bold color4     default 	~U # unread messages
+color index		bold color6     default 	~N # new messages
 color index		color12	        default 	~Q # messages which have been replied to
 color index		color11	        default 	~T # tagged messages
 color index		color7	        default		~v # messages part of a collapsed thread
