@@ -2,9 +2,21 @@
 notmuch tag +new tag:inbox AND tag:unread
 # untag inbox and unread if it is sent
 notmuch tag -inbox -unread tag:sent AND tag:inbox AND tag:unread
+
 unread=$(notmuch search tag:unread | wc -l)
+tmp=/tmp/id-$NOTMUCH_PROFILE
+mid=1
 if [[ $unread -gt 0 ]];then
-    notify-send -a Mutt -i ~/.local/share/icons/mail-$NOTMUCH_PROFILE.ico "New mail on $NOTMUCH_PROFILE" "$unread new emails"
+    if [ -f "$tmp" ]; then
+        mid=$(cat $tmp)
+    fi
+    mid=$(notify-send.py \
+        -a Mutt \
+        -r $mid \
+        -i ~/.local/share/icons/mail-$NOTMUCH_PROFILE.ico \
+        "New mail on $NOTMUCH_PROFILE" \
+        "$unread new emails")
+    echo $mid > $tmp
 fi
 
 # apply filters

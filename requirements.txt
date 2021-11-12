@@ -1,1 +1,2 @@
 oauth2tokens>==0.0.2.post2
+notify-send-py
