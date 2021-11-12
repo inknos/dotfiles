@@ -1,9 +1,10 @@
 #!/bin/sh
+notmuch tag +new tag:inbox AND tag:unread
 # untag inbox and unread if it is sent
 notmuch tag -inbox -unread tag:sent AND tag:inbox AND tag:unread
 unread=$(notmuch search tag:unread | wc -l)
 if [[ $unread -gt 0 ]];then
-    notify-send -a Mutt "New mail on $NOTMUCH_PROFILE" "$unread new emails"
+    notify-send -a Mutt -i ~/.local/share/icons/mail-$NOTMUCH_PROFILE.ico "New mail on $NOTMUCH_PROFILE" "$unread new emails"
 fi
 
 # apply filters

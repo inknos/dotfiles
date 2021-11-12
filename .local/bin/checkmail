@@ -1,4 +1,6 @@
 #!/usr/bin/bash
 #export NOTMUCH_CONFIG=/home/<username>/.config/notmuch/notmuchrc
 #export NMBGIT=/home/<username>/.local/share/notmuch/nmbug
-export NOTMUCH_PROFILE=redhat; notmuch new
+for profile in disroot redhat outlook; do
+    export NOTMUCH_PROFILE=$profile; notmuch new
+done
