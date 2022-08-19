@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import argparse
+import logging
 import os
 import shutil
 import subprocess
@@ -10,6 +11,41 @@ import sys
 working_dir = os.getcwd()
 dotfiles = os.path.join(working_dir, 'dotfiles')
 home = os.path.expanduser('~')
+
+
+class CustomFormatter(logging.Formatter):
+    grey = "\x1b[38;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    # format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+    format = "%(levelname)s: %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+# create logger with 'spam_application'
+logger = logging.getLogger("dotfiles")
+logger.setLevel(logging.DEBUG)
+
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(CustomFormatter())
+
+logger.addHandler(ch)
 
 files = {
     "local-bin" : {
@@ -22,6 +58,17 @@ files = {
         ],
         "post-install" : []
     },
+    "joplin" : {
+        "requirements" : [
+            "dejavu-fonts-all"
+        ],
+        "pre-install" : [],
+        "dotfiles" : [
+            ".config/joplin-desktop/userchrome.css",
+            ".config/joplin-desktop/userstyle.css"
+        ],
+        "post-install" : []
+    },
     "vim" : {
         "requirements" : [
             "vim-enhanced",
@@ -30,7 +77,8 @@ files = {
             "gcc-c++",
             "go",
             "npm",
-            "python-devel"
+            "python-devel",
+            "dejavu-fonts-all"
         ],
         "pre-install" : [
             "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
@@ -90,7 +138,7 @@ files = {
 
 def file_exists(file):
     if not os.path.exists(file):
-        print("WARNING: {} does not exist".format(file))
+        logger.warning("{} does not exist".format(file))
         return False
     return True
 
@@ -99,7 +147,7 @@ def install_dotfile(dotfile, dry_run=False):
     dest = os.path.join(home, dotfile)
     if not file_exists(source):
         return
-    print("Copying {} into {}".format(source, dest))
+    logger.info("Copying {} into {}".format(source, dest))
     if not dry_run:
         shutil.copy(source, dest)
 
@@ -107,43 +155,43 @@ def backup_dotfile(dotfile, dry_run=False):
     source = os.path.join(home, dotfile)
     dest = os.path.join(dotfiles, dotfile)
     if not file_exists(source):
-        print("WARNING: File {} does not exist. Cannot Backup.".format(source))
+        logger.warning("File {} does not exist. Cannot Backup.".format(source))
         return
-    print("Copying {} into {}".format(source, dest))
+    logger.info("Copying {} into {}".format(source, dest))
     if not dry_run:
         shutil.copy(source, dest)
 
 def run_command(command, dry_run=False):
-    print(command)
+    logger.info(command)
     if not dry_run:
         subprocess.run(command, shell=True)
 
 def install_all_dotfiles(dictionary, dry_run=False):
-    print("Installing dotfiles...")
+    logger.info("Installing dotfiles...")
     for item in dictionary:
         for dotfile in dictionary[item]["dotfiles"]:
             install_dotfile(dotfile, dry_run)
 
 def backup_all_dotfiles(dictionary, dry_run=False):
-    print("Backing up dotfiles...")
+    logger.info("Backing up dotfiles...")
     for item in dictionary:
         for dotfile in dictionary[item]["dotfiles"]:
             backup_dotfile(dotfile, dry_run)
 
 def run_all_pre_install(dictionary, dry_run=False):
-    print("Run pre-install scripts...")
+    logger.info("Run pre-install scripts...")
     for item in dictionary:
         for dotfile in dictionary[item]["pre-install"]:
             run_command(dotfile, dry_run)
 
 def run_all_post_install(dictionary, dry_run=False):
-    print("Run post-install scripts...")
+    logger.info("Run post-install scripts...")
     for item in dictionary:
         for dotfile in dictionary[item]["post-install"]:
             run_command(dotfile, dry_run)
 
 def install_requirements(dictionary, dry_run=False):
-    print("Install requirements...")
+    logger.info("Install requirements...")
     if dry_run:
         return
     requirements = []
@@ -153,6 +201,7 @@ def install_requirements(dictionary, dry_run=False):
     run_command("sudo dnf install " +  " ".join(requirements), dry_run)
 
 def main():
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dry-run',
                     action='store_true',
@@ -187,6 +236,8 @@ def main():
     args = parser.parse_args()
 
     dry_run = args.dry_run
+    if dry_run:
+        logger.info("Dry run")
     if args.backup:
         backup_all_dotfiles(files)
     elif all(v is None for v in [ args.requirements, args.install, args.pre_install, args.post_install]):
