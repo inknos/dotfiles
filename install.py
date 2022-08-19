@@ -158,7 +158,7 @@ class DotfileInstaller:
 
         # create console handler with a higher log level
         ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        ch.setLevel(logging.INFO)
 
         ch.setFormatter(CustomFormatter())
 
@@ -166,7 +166,7 @@ class DotfileInstaller:
 
         self._dry_run = dry_run
         if self._dry_run:
-            self._logger.info("Dry run")
+            self._logger.info("Running in dry-run mode")
 
         self._dictionary = dictionary
 
@@ -190,7 +190,7 @@ class DotfileInstaller:
         dest = os.path.join(home, dotfile)
         if not self._file_exists(source):
             return
-        self._logger.info("Copying {} into {}".format(source, dest))
+        self._logger.debug("Copying {} into {}".format(source, dest))
         if not self._dry_run:
             shutil.copy(source, dest)
 
@@ -200,14 +200,19 @@ class DotfileInstaller:
         if not self._file_exists(source):
             self._logger.warning("File {} does not exist. Cannot Backup.".format(source))
             return
-        self._logger.info("Copying {} into {}".format(source, dest))
+        self._logger.debug("Copying {} into {}".format(source, dest))
         if not self._dry_run:
             shutil.copy(source, dest)
 
     def _run_command(self, command):
-        self._logger.info(command)
+        self._logger.debug("Running {}".format(command))
         if not self._dry_run:
-            subprocess.run(command, shell=True)
+            with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
+                for line in p.stdout:
+                    self._logger.debug(line)
+                for line in p.stderr:
+                    self._logger.error(line)
+
 
     def _install_all_dotfiles(self):
         self._logger.info("Installing dotfiles...")
@@ -224,14 +229,14 @@ class DotfileInstaller:
     def _run_all_pre_install(self):
         self._logger.info("Run pre-install scripts...")
         for item in self._dictionary:
-            for dotfile in self._dictionary[item]["pre-install"]:
-                self._run_command(dotfile)
+            for command in self._dictionary[item]["pre-install"]:
+                self._run_command(command)
 
     def _run_all_post_install(self):
         self._logger.info("Run post-install scripts...")
         for item in self._dictionary:
-            for dotfile in self._dictionary[item]["post-install"]:
-                self._run_command(dotfile)
+            for command in self._dictionary[item]["post-install"]:
+                self._run_command(command)
 
     def _install_all_requirements(self):
         self._logger.info("Install requirements...")
@@ -241,7 +246,7 @@ class DotfileInstaller:
         for item in self._dictionary:
             for req in files[item]["requirements"]:
                 requirements.append(req)
-        self._run_command("sudo dnf install " +  " ".join(requirements), self._dry_run)
+        self._run_command("sudo dnf install " +  " ".join(requirements))
 
     def requirements(self):
         self._install_all_requirements()
@@ -254,6 +259,9 @@ class DotfileInstaller:
 
     def post(self):
         self._run_all_post_install()
+
+    def backup(self):
+        self._backup_all_dotfiles()
 
 
 def main():
@@ -289,13 +297,26 @@ def main():
                     dest='post_install',
                     help='Run post-install step'
                     )
+    parser.add_argument('-v', '--verbose',
+                    action='store_true',
+                    dest='verbose',
+                    help='Verbose mode (logger DEBUG)'
+                    )
     args = parser.parse_args()
 
+
     dots = DotfileInstaller(files, args.dry_run)
+    if args.verbose:
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+
+        ch.setFormatter(CustomFormatter())
+
+        dots.logger.addHandler(ch)
 
     if args.backup:
         dots.backup()
-    elif all(v is None for v in [ args.requirements, args.install, args.pre_install, args.post_install ]):
+    elif all(v is False for v in [ args.requirements, args.install, args.pre_install, args.post_install ]):
         dots.requirements()
         dots.pre()
         dots.install()
