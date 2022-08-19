@@ -9,7 +9,6 @@ export EDITOR="$VISUAL"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export BROWSER=firefox
-export EMAIL=`pass mail/redhat/mail`
 
 # path export
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.

@@ -26,22 +26,22 @@ files = {
             "python-devel"
         ],
         "pre-install" : [
-            "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-	        "mkdir -p ~/.cache/vim/{swp,bkp}"
+            "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
+	        "mkdir -p $HOME/.cache/vim/{swp,bkp}"
             ],
         "dotfiles" : [ ".vimrc" ],
         "post-install" : [
 	        "vim -c 'PlugInstall' -c 'qa!'",
-            "/usr/bin/python3 ~/.vim/plugged/YouCompleteMe/install.py --all"
+            "/usr/bin/python3 $HOME/.vim/plugged/YouCompleteMe/install.py --all"
         ]
     },
     "tmux" : {
         "requirements" : [ "tmux" ],
         "pre-install" : [
-            "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"
+            "git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm"
         ],
         "dotfiles" : [ ".tmux.conf", ".tmux.bashrc" ],
-        "post-install" : [ "tmux source-file ~/.tmux.conf" ]
+        "post-install" : [ "tmux source-file $HOME/.tmux.conf" ]
     },
     "git" : {
         "requirements" : [],
@@ -54,7 +54,7 @@ files = {
         "pre-install" : [
             "bash -c \"$(curl -fsSL \
             https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)\"",
-            "mkdir -p ~/.oh-my-bash/themes/producktive{,-root}"],
+            "mkdir -p $HOME/.oh-my-bash/themes/producktive{,-root}"],
         "dotfiles" : [
             ".bashrc",
             ".aliases",
@@ -72,8 +72,8 @@ files = {
     "gnome-shell" : {
         "requirements" : [],
         "pre-install" : [
-            "for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$$i \"['<Super>$$i']\"; done",
-            "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$$i \"['']\"; done"
+            "for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i \"['<Super>$i']\"; done",
+            "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i \"['']\"; done"
         ],
         "dotfiles" : [],
         "post-install" : []
