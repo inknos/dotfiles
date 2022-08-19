@@ -128,7 +128,11 @@ files = {
         "requirements" : [],
         "pre-install" : [
             "for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i \"['<Super>$i']\"; done",
-            "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i \"['']\"; done"
+            "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i \"['']\"; done",
+            "gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'",
+            "gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Bold 11'",
+            "gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed 11'",
+            "gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono 10'"
         ],
         "dotfiles" : [],
         "post-install" : []
