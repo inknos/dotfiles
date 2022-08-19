@@ -265,37 +265,36 @@ class DotfileInstaller:
 
 
 def main():
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dry-run',
                     action='store_true',
                     dest='dry_run',
                     help='Perform dry-run'
                     )
-    parser.add_argument('-b', '--backup',
-                    action='store_true',
-                    dest='backup',
-                    help='Backs up files'
-                    )
     parser.add_argument('-r', '--requirements',
                     action='store_true',
                     dest='requirements',
                     help='Run requirement step'
-                    )
-    parser.add_argument('-i', '--install',
-                    action='store_true',
-                    dest='install',
-                    help='Run install step'
                     )
     parser.add_argument('-p', '--pre',
                     action='store_true',
                     dest='pre_install',
                     help='Run pre-install step'
                     )
+    parser.add_argument('-i', '--install',
+                    action='store_true',
+                    dest='install',
+                    help='Run install step'
+                    )
     parser.add_argument('-P', '--post',
                     action='store_true',
                     dest='post_install',
                     help='Run post-install step'
+                    )
+    parser.add_argument('-b', '--backup',
+                    action='store_true',
+                    dest='backup',
+                    help='Backs up files'
                     )
     parser.add_argument('-v', '--verbose',
                     action='store_true',
