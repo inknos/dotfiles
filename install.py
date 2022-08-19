@@ -107,6 +107,7 @@ def backup_dotfile(dotfile, dry_run=False):
     source = os.path.join(home, dotfile)
     dest = os.path.join(dotfiles, dotfile)
     if not file_exists(source):
+        print("WARNING: File {} does not exist. Cannot Backup.".format(source))
         return
     print("Copying {} into {}".format(source, dest))
     if not dry_run:
