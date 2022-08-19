@@ -1,9 +1,6 @@
 #!/bin/python3
 
-import dnf
-import dnf.cli.progress
-
-import libdnf
+import argparse
 import os
 import shutil
 import subprocess
@@ -145,11 +142,56 @@ def install_requirements(dictionary, dry_run=False):
     run_command("sudo dnf install " +  " ".join(requirements), dry_run)
 
 def main():
-    dry_run = False
-    install_requirements(files, dry_run)
-    run_all_pre_install(files, dry_run)
-    install_all_dotfiles(files, dry_run)
-    run_all_post_install(files, dry_run)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--dry-run',
+                    action='store_true',
+                    dest='dry_run',
+                    help='Perform dry-run'
+                    )
+    parser.add_argument('-b', '--backup',
+                    action='store_true',
+                    dest='backup',
+                    help='Backs up files'
+                    )
+    parser.add_argument('-r', '--requirements',
+                    action='store_true',
+                    dest='requirements',
+                    help='Run requirement step'
+                    )
+    parser.add_argument('-i', '--install',
+                    action='store_true',
+                    dest='install',
+                    help='Run install step'
+                    )
+    parser.add_argument('-p', '--pre',
+                    action='store_true',
+                    dest='pre_install',
+                    help='Run pre-install step'
+                    )
+    parser.add_argument('-P', '--post',
+                    action='store_true',
+                    dest='post_install',
+                    help='Run post-install step'
+                    )
+    args = parser.parse_args()
+
+    dry_run = args.dry_run
+    if args.backup:
+        backup_all_dotfiles(files)
+    elif all(v is None for v in [ args.requirements, args.install, args.pre_install, args.post_install]):
+        install_requirements(files, dry_run)
+        run_all_pre_install(files, dry_run)
+        install_all_dotfiles(files, dry_run)
+        run_all_post_install(files, dry_run)
+    else:
+        if args.requirements:
+            install_requirements(files, dry_run)
+        if args.pre_install:
+            run_all_pre_install(files, dry_run)
+        if args.install:
+            install_all_dotfiles(files, dry_run)
+        if args.post_install:
+            run_all_post_install(files, dry_run)
 
 if __name__ == "__main__":
     main()
