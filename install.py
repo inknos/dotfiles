@@ -35,30 +35,31 @@ class CustomFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
+
 files = {
-    "local-bin" : {
-        "requirements" : [],
-        "pre-install" : [
+    "local-bin": {
+        "requirements": [],
+        "pre-install": [
             "mkdir -p $HOME/.local/bin"
         ],
-        "dotfiles" : [
+        "dotfiles": [
             ".local/bin/dbox-remote"
         ],
-        "post-install" : []
+        "post-install": []
     },
-    "joplin" : {
-        "requirements" : [
+    "joplin": {
+        "requirements": [
             "dejavu-fonts-all"
         ],
-        "pre-install" : [],
-        "dotfiles" : [
+        "pre-install": [],
+        "dotfiles": [
             ".config/joplin-desktop/userchrome.css",
             ".config/joplin-desktop/userstyle.css"
         ],
-        "post-install" : []
+        "post-install": []
     },
-    "vim" : {
-        "requirements" : [
+    "vim": {
+        "requirements": [
             "vim-enhanced",
             "cmake",
             "curl",
@@ -69,53 +70,53 @@ files = {
             "python3-flake8",
             "dejavu-fonts-all"
         ],
-        "pre-install" : [
+        "pre-install": [
             "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-	        "mkdir -p $HOME/.cache/vim/{swp,bkp}"
-            ],
-        "dotfiles" : [ ".vimrc" ],
-        "post-install" : [
-	        "vim -c 'PlugInstall' -c 'qa!'",
+            "mkdir -p $HOME/.cache/vim/{swp,bkp}"
+        ],
+        "dotfiles": [".vimrc"],
+        "post-install": [
+            "vim -c 'PlugInstall' -c 'qa!'",
             "/usr/bin/python3 $HOME/.vim/plugged/YouCompleteMe/install.py --all"
         ]
     },
-    "tmux" : {
-        "requirements" : [ "tmux" ],
-        "pre-install" : [
+    "tmux": {
+        "requirements": ["tmux"],
+        "pre-install": [
             "git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm"
         ],
-        "dotfiles" : [ ".tmux.conf", ".tmux.bashrc" ],
-        "post-install" : [ "tmux source-file $HOME/.tmux.conf" ]
+        "dotfiles": [".tmux.conf", ".tmux.bashrc"],
+        "post-install": ["tmux source-file $HOME/.tmux.conf"]
     },
-    "git" : {
-        "requirements" : [],
-        "pre-install" : [],
-        "dotfiles" : [ ".gitignore.global", ".gitconfig"],
-        "post-install" : []
+    "git": {
+        "requirements": [],
+        "pre-install": [],
+        "dotfiles": [".gitignore.global", ".gitconfig"],
+        "post-install": []
     },
-    "oh-my-bash" : {
-        "requirements" : [],
-        "pre-install" : [
+    "oh-my-bash": {
+        "requirements": [],
+        "pre-install": [
             "bash -c \"$(curl -fsSL \
             https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)\"",
             "mkdir -p $HOME/.oh-my-bash/themes/producktive{,-root}"],
-        "dotfiles" : [
+        "dotfiles": [
             ".bashrc",
             ".aliases",
             ".environment",
             ".oh-my-bash/themes/producktive/producktive.theme.sh",
             ".oh-my-bash/themes/producktive-root/producktive-root.theme.sh"],
-        "post-install" : [ ]
+        "post-install": []
     },
-    "gnome-terminal" : {
-        "requirements" : [],
-        "pre-install" : [ "dconf load /org/gnome/terminal/legacy/profiles:/ < dotfiles/gnome-terminal-profiles.dconf" ],
-        "dotfiles" : [],
-        "post-install" : []
+    "gnome-terminal": {
+        "requirements": [],
+        "pre-install": ["dconf load /org/gnome/terminal/legacy/profiles:/ < dotfiles/gnome-terminal-profiles.dconf"],
+        "dotfiles": [],
+        "post-install": []
     },
-    "gnome-shell" : {
-        "requirements" : [],
-        "pre-install" : [
+    "gnome-shell": {
+        "requirements": [],
+        "pre-install": [
             "for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i \"['<Super>$i']\"; done",
             "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i \"['']\"; done",
             "gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'",
@@ -123,11 +124,12 @@ files = {
             "gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed 11'",
             "gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono 10'"
         ],
-        "dotfiles" : [],
-        "post-install" : []
+        "dotfiles": [],
+        "post-install": []
     },
 
 }
+
 
 class CustomFormatter(logging.Formatter):
     grey = "\x1b[38;20m"
@@ -151,8 +153,9 @@ class CustomFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
+
 class DotfileInstaller:
-    def __init__(self, dictionary, dry_run = False):
+    def __init__(self, dictionary, dry_run=False):
         # create logger
         self._logger = logging.getLogger("dotfiles")
         self._logger.setLevel(logging.DEBUG)
@@ -174,7 +177,6 @@ class DotfileInstaller:
     @property
     def logger(self):
         return self._logger
-
 
     def _file_exists(self, file):
         """
@@ -199,7 +201,8 @@ class DotfileInstaller:
         source = os.path.join(home, dotfile)
         dest = os.path.join(dotfiles, dotfile)
         if not self._file_exists(source):
-            self._logger.warning("File {} does not exist. Cannot Backup.".format(source))
+            self._logger.warning(
+                "File {} does not exist. Cannot Backup.".format(source))
             return
         self._logger.debug("Copying {} into {}".format(source, dest))
         if not self._dry_run:
@@ -213,7 +216,6 @@ class DotfileInstaller:
                     self._logger.debug(line)
                 for line in p.stderr:
                     self._logger.error(line)
-
 
     def _install_all_dotfiles(self):
         self._logger.info("Installing dotfiles...")
@@ -247,7 +249,7 @@ class DotfileInstaller:
         for item in self._dictionary:
             for req in files[item]["requirements"]:
                 requirements.append(req)
-        self._run_command("sudo dnf install -y " +  " ".join(requirements))
+        self._run_command("sudo dnf install -y " + " ".join(requirements))
 
     def requirements(self):
         self._install_all_requirements()
@@ -268,42 +270,41 @@ class DotfileInstaller:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dry-run',
-                    action='store_true',
-                    dest='dry_run',
-                    help='Perform dry-run'
-                    )
+                        action='store_true',
+                        dest='dry_run',
+                        help='Perform dry-run'
+                        )
     parser.add_argument('-r', '--requirements',
-                    action='store_true',
-                    dest='requirements',
-                    help='Run requirement step'
-                    )
+                        action='store_true',
+                        dest='requirements',
+                        help='Run requirement step'
+                        )
     parser.add_argument('-p', '--pre',
-                    action='store_true',
-                    dest='pre_install',
-                    help='Run pre-install step'
-                    )
+                        action='store_true',
+                        dest='pre_install',
+                        help='Run pre-install step'
+                        )
     parser.add_argument('-i', '--install',
-                    action='store_true',
-                    dest='install',
-                    help='Run install step'
-                    )
+                        action='store_true',
+                        dest='install',
+                        help='Run install step'
+                        )
     parser.add_argument('-P', '--post',
-                    action='store_true',
-                    dest='post_install',
-                    help='Run post-install step'
-                    )
+                        action='store_true',
+                        dest='post_install',
+                        help='Run post-install step'
+                        )
     parser.add_argument('-b', '--backup',
-                    action='store_true',
-                    dest='backup',
-                    help='Backs up files'
-                    )
+                        action='store_true',
+                        dest='backup',
+                        help='Backs up files'
+                        )
     parser.add_argument('-v', '--verbose',
-                    action='store_true',
-                    dest='verbose',
-                    help='Verbose mode (logger DEBUG)'
-                    )
+                        action='store_true',
+                        dest='verbose',
+                        help='Verbose mode (logger DEBUG)'
+                        )
     args = parser.parse_args()
-
 
     dots = DotfileInstaller(files, args.dry_run)
     if args.verbose:
@@ -316,7 +317,7 @@ def main():
 
     if args.backup:
         dots.backup()
-    elif all(v is False for v in [ args.requirements, args.install, args.pre_install, args.post_install ]):
+    elif all(v is False for v in [args.requirements, args.install, args.pre_install, args.post_install]):
         dots.requirements()
         dots.pre()
         dots.install()
@@ -330,6 +331,7 @@ def main():
             dots.install()
         if args.post_install:
             dots.post()
+
 
 if __name__ == "__main__":
     main()
