@@ -45,12 +45,6 @@ alias bat='bat --theme ansi-dark -n'
 alias ggaa='alias | grep'
 alias ggii='alias | grep -i'
 
-# VimWiki
-#alias wiki='vim -c VimwikiIndex'
-
-# protontricks for flatpak
-#alias protontricks-flat='flatpak run --command=protontricks com.valvesoftware.Steam --no-runtime'
-
 # tldr
 alias tl='tldr'
 
