@@ -1,7 +1,0 @@
-#!/bin/sh
-# retag all "new" messages "inbox" and "unread"
-# tag all messages from "me" as sent and remove tags inbox and unread
-# notmuch tag -new -inbox +sent -- from:`pass mail/redhat/mail`
-
-cd ~/Mail/RedHat
-gmi sync
