@@ -1,4 +1,4 @@
-# dotfiles
+# dotfiles 🦆
 
 These are my dotfiles. There is a python script that installs and backs up everything.
 Installation and backup steps work well, the rest is... eeeeh, it's a cruel world. They would "work" on Fedora+GNOME.
