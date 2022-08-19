@@ -66,6 +66,7 @@ files = {
             "go",
             "npm",
             "python-devel",
+            "python3-flake8",
             "dejavu-fonts-all"
         ],
         "pre-install" : [
@@ -246,7 +247,7 @@ class DotfileInstaller:
         for item in self._dictionary:
             for req in files[item]["requirements"]:
                 requirements.append(req)
-        self._run_command("sudo dnf install " +  " ".join(requirements))
+        self._run_command("sudo dnf install -y " +  " ".join(requirements))
 
     def requirements(self):
         self._install_all_requirements()
