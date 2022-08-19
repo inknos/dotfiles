@@ -35,18 +35,6 @@ class CustomFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
-# create logger with 'spam_application'
-logger = logging.getLogger("dotfiles")
-logger.setLevel(logging.DEBUG)
-
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-
-ch.setFormatter(CustomFormatter())
-
-logger.addHandler(ch)
-
 files = {
     "local-bin" : {
         "requirements" : [],
@@ -140,69 +128,133 @@ files = {
 
 }
 
-def file_exists(file):
-    if not os.path.exists(file):
-        logger.warning("{} does not exist".format(file))
-        return False
-    return True
+class CustomFormatter(logging.Formatter):
+    grey = "\x1b[38;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    # format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+    format = "%(levelname)s: %(message)s"
 
-def install_dotfile(dotfile, dry_run=False):
-    source = os.path.join(dotfiles, dotfile)
-    dest = os.path.join(home, dotfile)
-    if not file_exists(source):
-        return
-    logger.info("Copying {} into {}".format(source, dest))
-    if not dry_run:
-        shutil.copy(source, dest)
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
 
-def backup_dotfile(dotfile, dry_run=False):
-    source = os.path.join(home, dotfile)
-    dest = os.path.join(dotfiles, dotfile)
-    if not file_exists(source):
-        logger.warning("File {} does not exist. Cannot Backup.".format(source))
-        return
-    logger.info("Copying {} into {}".format(source, dest))
-    if not dry_run:
-        shutil.copy(source, dest)
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
 
-def run_command(command, dry_run=False):
-    logger.info(command)
-    if not dry_run:
-        subprocess.run(command, shell=True)
+class DotfileInstaller:
+    def __init__(self, dictionary, dry_run = False):
+        # create logger
+        self._logger = logging.getLogger("dotfiles")
+        self._logger.setLevel(logging.DEBUG)
 
-def install_all_dotfiles(dictionary, dry_run=False):
-    logger.info("Installing dotfiles...")
-    for item in dictionary:
-        for dotfile in dictionary[item]["dotfiles"]:
-            install_dotfile(dotfile, dry_run)
+        # create console handler with a higher log level
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
 
-def backup_all_dotfiles(dictionary, dry_run=False):
-    logger.info("Backing up dotfiles...")
-    for item in dictionary:
-        for dotfile in dictionary[item]["dotfiles"]:
-            backup_dotfile(dotfile, dry_run)
+        ch.setFormatter(CustomFormatter())
 
-def run_all_pre_install(dictionary, dry_run=False):
-    logger.info("Run pre-install scripts...")
-    for item in dictionary:
-        for dotfile in dictionary[item]["pre-install"]:
-            run_command(dotfile, dry_run)
+        self._logger.addHandler(ch)
 
-def run_all_post_install(dictionary, dry_run=False):
-    logger.info("Run post-install scripts...")
-    for item in dictionary:
-        for dotfile in dictionary[item]["post-install"]:
-            run_command(dotfile, dry_run)
+        self._dry_run = dry_run
+        if self._dry_run:
+            self._logger.info("Dry run")
 
-def install_requirements(dictionary, dry_run=False):
-    logger.info("Install requirements...")
-    if dry_run:
-        return
-    requirements = []
-    for item in dictionary:
-        for req in files[item]["requirements"]:
-            requirements.append(req)
-    run_command("sudo dnf install " +  " ".join(requirements), dry_run)
+        self._dictionary = dictionary
+
+    @property
+    def logger(self):
+        return self._logger
+
+
+    def _file_exists(self, file):
+        """
+        Return True if file exists
+        False if doesn't and log it.
+        """
+        if not os.path.exists(file):
+            self._logger.warning("{} does not exist".format(file))
+            return False
+        return True
+
+    def _install_dotfile(self, dotfile):
+        source = os.path.join(dotfiles, dotfile)
+        dest = os.path.join(home, dotfile)
+        if not self._file_exists(source):
+            return
+        self._logger.info("Copying {} into {}".format(source, dest))
+        if not self._dry_run:
+            shutil.copy(source, dest)
+
+    def _backup_dotfile(self, dotfile):
+        source = os.path.join(home, dotfile)
+        dest = os.path.join(dotfiles, dotfile)
+        if not self._file_exists(source):
+            self._logger.warning("File {} does not exist. Cannot Backup.".format(source))
+            return
+        self._logger.info("Copying {} into {}".format(source, dest))
+        if not self._dry_run:
+            shutil.copy(source, dest)
+
+    def _run_command(self, command):
+        self._logger.info(command)
+        if not self._dry_run:
+            subprocess.run(command, shell=True)
+
+    def _install_all_dotfiles(self):
+        self._logger.info("Installing dotfiles...")
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["dotfiles"]:
+                self._install_dotfile(dotfile)
+
+    def _backup_all_dotfiles(self):
+        self._logger.info("Backing up dotfiles...")
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["dotfiles"]:
+                self._backup_dotfile(dotfile)
+
+    def _run_all_pre_install(self):
+        self._logger.info("Run pre-install scripts...")
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["pre-install"]:
+                self._run_command(dotfile)
+
+    def _run_all_post_install(self):
+        self._logger.info("Run post-install scripts...")
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["post-install"]:
+                self._run_command(dotfile)
+
+    def _install_all_requirements(self):
+        self._logger.info("Install requirements...")
+        if self._dry_run:
+            return
+        requirements = []
+        for item in self._dictionary:
+            for req in files[item]["requirements"]:
+                requirements.append(req)
+        self._run_command("sudo dnf install " +  " ".join(requirements), self._dry_run)
+
+    def requirements(self):
+        self._install_all_requirements()
+
+    def pre(self):
+        self._run_all_pre_install()
+
+    def install(self):
+        self._install_all_dotfiles()
+
+    def post(self):
+        self._run_all_post_install()
+
 
 def main():
 
@@ -239,25 +291,24 @@ def main():
                     )
     args = parser.parse_args()
 
-    dry_run = args.dry_run
-    if dry_run:
-        logger.info("Dry run")
+    dots = DotfileInstaller(files, args.dry_run)
+
     if args.backup:
-        backup_all_dotfiles(files)
-    elif all(v is None for v in [ args.requirements, args.install, args.pre_install, args.post_install]):
-        install_requirements(files, dry_run)
-        run_all_pre_install(files, dry_run)
-        install_all_dotfiles(files, dry_run)
-        run_all_post_install(files, dry_run)
+        dots.backup()
+    elif all(v is None for v in [ args.requirements, args.install, args.pre_install, args.post_install ]):
+        dots.requirements()
+        dots.pre()
+        dots.install()
+        dots.post()
     else:
         if args.requirements:
-            install_requirements(files, dry_run)
+            dots.requirements()
         if args.pre_install:
-            run_all_pre_install(files, dry_run)
+            dots.pre()
         if args.install:
-            install_all_dotfiles(files, dry_run)
+            dots.install()
         if args.post_install:
-            run_all_post_install(files, dry_run)
+            dots.post()
 
 if __name__ == "__main__":
     main()
