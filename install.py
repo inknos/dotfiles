@@ -12,6 +12,16 @@ dotfiles = os.path.join(working_dir, 'dotfiles')
 home = os.path.expanduser('~')
 
 files = {
+    "local-bin" : {
+        "requirements" : [],
+        "pre-install" : [
+            "mkdir -p $HOME/.local/bin"
+        ],
+        "dotfiles" : [
+            ".local/bin/dbox-remote"
+        ],
+        "post-install" : []
+    },
     "vim" : {
         "requirements" : [
             "vim-enhanced",
