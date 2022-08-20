@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import filecmp
 import os
 import shutil
 import subprocess
@@ -188,25 +189,41 @@ class DotfileInstaller:
             return False
         return True
 
+    def _files_are_the_same(self, dotfile):
+        """
+        If files are the same return False and log it
+        """
+        src = os.path.join(home, dotfile)
+        dst = os.path.join(dotfiles, dotfile)
+        try:
+            result = filecmp.cmp(src, dst)
+        except FileNotFoundError as e:
+            result = False
+        if result:
+            self._logger.debug("Files are the same: {} was not copied".format(dotfile))
+        return result
+
     def _install_dotfile(self, dotfile):
-        source = os.path.join(dotfiles, dotfile)
-        dest = os.path.join(home, dotfile)
-        if not self._file_exists(source):
+        src = os.path.join(dotfiles, dotfile)
+        dst = os.path.join(home, dotfile)
+        if not self._file_exists(src):
             return
-        self._logger.debug("Copying {} into {}".format(source, dest))
+        if self._files_are_the_same(dotfile):
+            return
+        self._logger.info("Copying {} to {}".format(src, dst))
         if not self._dry_run:
-            shutil.copy(source, dest)
+            shutil.copy(src, dst)
 
     def _backup_dotfile(self, dotfile):
-        source = os.path.join(home, dotfile)
-        dest = os.path.join(dotfiles, dotfile)
-        if not self._file_exists(source):
-            self._logger.warning(
-                "File {} does not exist. Cannot Backup.".format(source))
+        src = os.path.join(home, dotfile)
+        dst = os.path.join(dotfiles, dotfile)
+        if not self._file_exists(src):
             return
-        self._logger.debug("Copying {} into {}".format(source, dest))
+        if self._files_are_the_same(dotfile):
+            return
+        self._logger.info("Copying {} to {}".format(src, dst))
         if not self._dry_run:
-            shutil.copy(source, dest)
+            shutil.copy(src, dst)
 
     def _run_command(self, command):
         self._logger.debug("Running {}".format(command))
