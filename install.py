@@ -6,6 +6,7 @@ import filecmp
 import os
 import shutil
 import subprocess
+import sys
 
 
 working_dir = os.getcwd()
@@ -159,9 +160,9 @@ class DotfileInstaller:
         if self._dry_run:
             self._logger.debug("Running in dry-run mode")
 
-        for key in self._dictionary:
-            self._pkglist.append(key)
-        print(self._pkglist)
+        if pkglist == []:
+            for key in self._dictionary:
+                self._pkglist.append(key)
 
     @property
     def logger(self):
@@ -274,6 +275,8 @@ class DotfileInstaller:
         """
         self._logger.info("Run post-install scripts...")
         for item in self._dictionary:
+            if item not in self._pkglist:
+                continue
             for command in self._dictionary[item]["post-install"]:
                 self._run_command(command)
 
@@ -358,15 +361,19 @@ def main():
                         dest='verbose',
                         help='Verbose mode (logger DEBUG)'
                         )
+    parser.add_argument('pkglist', nargs='*',
+                        help='List of packages to process'
+                        )
     args = parser.parse_args()
 
-    dots = DotfileInstaller(files, args.dry_run)
+
+    dots = DotfileInstaller(files, args.dry_run, args.pkglist)
+
     if args.verbose:
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
 
         ch.setFormatter(CustomFormatter())
-
         dots.logger.addHandler(ch)
 
     if args.backup:
