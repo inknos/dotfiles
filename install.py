@@ -139,6 +139,7 @@ class DotfileInstaller:
     run pre/post-install scripts, copy dotfiles
     and backup them.
     """
+
     def __init__(self, dictionary, dry_run=False):
         # create logger
         self._logger = logging.getLogger("dotfiles")
@@ -192,7 +193,8 @@ class DotfileInstaller:
         except FileNotFoundError:
             result = False
         if result:
-            self._logger.debug("Files are the same: {} was not copied".format(dotfile))
+            self._logger.debug(
+                "Files are the same: {} was not copied".format(dotfile))
         return result
 
     def _install_dotfile(self, dotfile):
