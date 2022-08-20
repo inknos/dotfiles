@@ -182,9 +182,17 @@ class DotfileInstaller:
 
         self._dictionary = dictionary
 
+        self._pkglist = []
+        for key in self._dictionary:
+            self._pkglist.append(key)
+
     @property
     def logger(self):
         return self._logger
+
+    @pkglist.setter
+    def pkglist(self, arg):
+        self._pkglist = arg
 
     def _file_exists(self, file):
         """
