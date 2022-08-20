@@ -156,6 +156,13 @@ class CustomFormatter(logging.Formatter):
 
 
 class DotfileInstaller:
+    """
+    Manage dictionary to install dotfiles.
+
+    For each package it can install requirements,
+    run pre/post-install scripts, copy dotfiles
+    and backup them.
+    """
     def __init__(self, dictionary, dry_run=False):
         # create logger
         self._logger = logging.getLogger("dotfiles")
@@ -191,7 +198,8 @@ class DotfileInstaller:
 
     def _files_are_the_same(self, dotfile):
         """
-        If files are the same return False and log it
+        Return False if file differ or one file does not exist
+        Return True if files are the same and log it
         """
         src = os.path.join(home, dotfile)
         dst = os.path.join(dotfiles, dotfile)
@@ -204,6 +212,9 @@ class DotfileInstaller:
         return result
 
     def _install_dotfile(self, dotfile):
+        """
+        Install dotfile from dotfile dir to $HOME
+        """
         src = os.path.join(dotfiles, dotfile)
         dst = os.path.join(home, dotfile)
         if not self._file_exists(src):
@@ -215,6 +226,9 @@ class DotfileInstaller:
             shutil.copy(src, dst)
 
     def _backup_dotfile(self, dotfile):
+        """
+        Backup dotfile from $HOME to dotfile dir
+        """
         src = os.path.join(home, dotfile)
         dst = os.path.join(dotfiles, dotfile)
         if not self._file_exists(src):
@@ -226,6 +240,10 @@ class DotfileInstaller:
             shutil.copy(src, dst)
 
     def _run_command(self, command):
+        """
+        Run bash command from python
+        Log in DEBUG stdout and stderr
+        """
         self._logger.debug("Running {}".format(command))
         if not self._dry_run:
             with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
@@ -235,30 +253,45 @@ class DotfileInstaller:
                     self._logger.error(line)
 
     def _install_all_dotfiles(self):
+        """
+        Loop through dotfiles and install them
+        """
         self._logger.info("Installing dotfiles...")
         for item in self._dictionary:
             for dotfile in self._dictionary[item]["dotfiles"]:
                 self._install_dotfile(dotfile)
 
     def _backup_all_dotfiles(self):
+        """
+        Loop through dotfiles and backup them
+        """
         self._logger.info("Backing up dotfiles...")
         for item in self._dictionary:
             for dotfile in self._dictionary[item]["dotfiles"]:
                 self._backup_dotfile(dotfile)
 
     def _run_all_pre_install(self):
+        """
+        Loop through pre install scripts and run them
+        """
         self._logger.info("Run pre-install scripts...")
         for item in self._dictionary:
             for command in self._dictionary[item]["pre-install"]:
                 self._run_command(command)
 
     def _run_all_post_install(self):
+        """
+        Loop through post install scripts and run them
+        """
         self._logger.info("Run post-install scripts...")
         for item in self._dictionary:
             for command in self._dictionary[item]["post-install"]:
                 self._run_command(command)
 
     def _install_all_requirements(self):
+        """
+        Loop through requirements and install them
+        """
         self._logger.info("Install requirements...")
         if self._dry_run:
             return
@@ -269,18 +302,33 @@ class DotfileInstaller:
         self._run_command("sudo dnf install -y " + " ".join(requirements))
 
     def requirements(self):
+        """
+        Install all requirements
+        """
         self._install_all_requirements()
 
     def pre(self):
+        """
+        Run pre-install scripts
+        """
         self._run_all_pre_install()
 
     def install(self):
+        """
+        Install dotfiles
+        """
         self._install_all_dotfiles()
 
     def post(self):
+        """
+        Run post-install scripts
+        """
         self._run_all_post_install()
 
     def backup(self):
+        """
+        Backup dotfiles
+        """
         self._backup_all_dotfiles()
 
 
