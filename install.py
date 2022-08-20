@@ -140,7 +140,10 @@ class DotfileInstaller:
     and backup them.
     """
 
-    def __init__(self, dictionary, dry_run=False):
+    def __init__(self, dictionary, dry_run=False, pkglist=[]):
+        self._dictionary = dictionary
+        self._pkglist = pkglist
+
         # create logger
         self._logger = logging.getLogger("dotfiles")
         self._logger.setLevel(logging.DEBUG)
@@ -150,22 +153,23 @@ class DotfileInstaller:
         ch.setLevel(logging.INFO)
 
         ch.setFormatter(CustomFormatter())
-
         self._logger.addHandler(ch)
 
         self._dry_run = dry_run
         if self._dry_run:
             self._logger.debug("Running in dry-run mode")
 
-        self._dictionary = dictionary
-
-        self._pkglist = []
         for key in self._dictionary:
             self._pkglist.append(key)
+        print(self._pkglist)
 
     @property
     def logger(self):
         return self._logger
+
+    @property
+    def pkglist(self):
+        return self._pkglist
 
     @pkglist.setter
     def pkglist(self, arg):
@@ -193,8 +197,7 @@ class DotfileInstaller:
         except FileNotFoundError:
             result = False
         if result:
-            self._logger.debug(
-                "Files are the same: {} was not copied".format(dotfile))
+            self._logger.debug("Files are the same: {} was not copied".format(dotfile))
         return result
 
     def _install_dotfile(self, dotfile):
