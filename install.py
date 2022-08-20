@@ -132,6 +132,12 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
+def _H(path):
+    p = path
+    p = p.replace("/home/nsella", "~")
+    p = p.replace("$HOME", "~")
+    return p
+
 class DotfileInstaller:
     """
     Manage dictionary to install dotfiles.
@@ -182,7 +188,7 @@ class DotfileInstaller:
         False if doesn't and log it.
         """
         if not os.path.exists(file):
-            self._logger.warning("{} does not exist".format(file))
+            self._logger.warning("{} does not exist".format(_H(file)))
             return False
         return True
 
@@ -198,7 +204,7 @@ class DotfileInstaller:
         except FileNotFoundError:
             result = False
         if result:
-            self._logger.debug("Files are the same: {} was not copied".format(dotfile))
+            self._logger.debug("DUPLICATE: {} was not copied".format(_H(dotfile)))
         return result
 
     def _install_dotfile(self, dotfile):
@@ -211,7 +217,7 @@ class DotfileInstaller:
             return
         if self._files_are_the_same(dotfile):
             return
-        self._logger.info("Copying {} to {}".format(src, dst))
+        self._logger.info("CP {} -> {}".format(_H(src), _H(dst)))
         if not self._dry_run:
             shutil.copy(src, dst)
 
@@ -225,7 +231,7 @@ class DotfileInstaller:
             return
         if self._files_are_the_same(dotfile):
             return
-        self._logger.info("Copying {} to {}".format(src, dst))
+        self._logger.info("CP {} TO {}".format(_H(src), _H(dst)))
         if not self._dry_run:
             shutil.copy(src, dst)
 
@@ -234,7 +240,7 @@ class DotfileInstaller:
         Run bash command from python
         Log in DEBUG stdout and stderr
         """
-        self._logger.debug("Running {}".format(command))
+        self._logger.debug("RUN: {}".format(command))
         if not self._dry_run:
             with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
                 for line in p.stdout:
