@@ -6,7 +6,6 @@ import filecmp
 import os
 import shutil
 import subprocess
-import sys
 
 
 working_dir = os.getcwd()
