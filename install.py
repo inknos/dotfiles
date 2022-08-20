@@ -178,7 +178,7 @@ class DotfileInstaller:
 
         self._dry_run = dry_run
         if self._dry_run:
-            self._logger.info("Running in dry-run mode")
+            self._logger.debug("Running in dry-run mode")
 
         self._dictionary = dictionary
 
