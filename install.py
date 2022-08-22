@@ -164,7 +164,7 @@ class DotfileInstaller:
             return
         if self._files_are_the_same(dotfile):
             return
-        self._logger.info("CP {} TO {}".format(_H(src), _H(dst)))
+        self._logger.info("CP {} -> {}".format(_H(src), _H(dst)))
         if not self._dry_run:
             shutil.copy(src, dst)
 
