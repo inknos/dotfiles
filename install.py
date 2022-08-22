@@ -86,22 +86,24 @@ class DotfileInstaller:
 
         # create logger
         self._logger = logging.getLogger("dotfiles")
-        self._logger.setLevel(logging.DEBUG)
+        self._logger.setLevel(logging.INFO)
 
         # create console handler with a higher log level
         ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
 
         ch.setFormatter(CustomFormatter())
         self._logger.addHandler(ch)
 
         self._dry_run = dry_run
         if self._dry_run:
-            self._logger.debug("Running in dry-run mode")
+            self._logger.info("Running in dry-run mode")
 
         if pkglist == []:
             for key in self._dictionary:
                 self._pkglist.append(key)
+
+    def __del__(self):
+        self._logger.info("Done")
 
     @property
     def logger(self):
@@ -310,11 +312,8 @@ def main():
     dots = DotfileInstaller(dry_run=args.dry_run, pkglist=args.pkglist)
 
     if args.verbose:
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-
-        ch.setFormatter(CustomFormatter())
-        dots.logger.addHandler(ch)
+        my_logger = logging.getLogger('dotfiles')
+        my_logger.setLevel(logging.DEBUG)
 
     if args.backup:
         dots.backup()
