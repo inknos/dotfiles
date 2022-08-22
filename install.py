@@ -228,7 +228,7 @@ class DotfileInstaller:
             return
         requirements = []
         for item in self._dictionary:
-            for req in files[item]["requirements"]:
+            for req in self._dictionary[item]["requirements"]:
                 requirements.append(req)
         self._run_command("sudo dnf install -y " + " ".join(requirements))
 
