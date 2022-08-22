@@ -7,105 +7,12 @@ import os
 import shutil
 import subprocess
 import sys
+import yaml
 
 
 working_dir = os.getcwd()
 dotfiles = os.path.join(working_dir, 'dotfiles')
 home = os.path.expanduser('~')
-
-
-files = {
-    "local-bin": {
-        "requirements": [],
-        "pre-install": [
-            "mkdir -p $HOME/.local/bin"
-        ],
-        "dotfiles": [
-            ".local/bin/dbox-remote"
-        ],
-        "post-install": []
-    },
-    "joplin": {
-        "requirements": [
-            "dejavu-fonts-all"
-        ],
-        "pre-install": [],
-        "dotfiles": [
-            ".config/joplin-desktop/userchrome.css",
-            ".config/joplin-desktop/userstyle.css"
-        ],
-        "post-install": []
-    },
-    "vim": {
-        "requirements": [
-            "vim-enhanced",
-            "cmake",
-            "curl",
-            "gcc-c++",
-            "go",
-            "npm",
-            "python-devel",
-            "python3-flake8",
-            "dejavu-fonts-all"
-        ],
-        "pre-install": [
-            "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-            "mkdir -p $HOME/.cache/vim/{swp,bkp}"
-        ],
-        "dotfiles": [".vimrc"],
-        "post-install": [
-            "vim -c 'PlugInstall' -c 'qa!'",
-            "/usr/bin/python3 $HOME/.vim/plugged/YouCompleteMe/install.py --all"
-        ]
-    },
-    "tmux": {
-        "requirements": ["tmux"],
-        "pre-install": [
-            "git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm"
-        ],
-        "dotfiles": [".tmux.conf", ".tmux.bashrc"],
-        "post-install": ["tmux source-file $HOME/.tmux.conf"]
-    },
-    "git": {
-        "requirements": [],
-        "pre-install": [],
-        "dotfiles": [".gitignore.global", ".gitconfig"],
-        "post-install": []
-    },
-    "oh-my-bash": {
-        "requirements": [],
-        "pre-install": [
-            "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)\" --unattended",
-            "mkdir -p $HOME/.oh-my-bash/themes/producktive{,-root}"],
-        "dotfiles": [
-            ".bashrc",
-            ".aliases",
-            ".environment",
-            ".oh-my-bash/themes/producktive/producktive.theme.sh",
-            ".oh-my-bash/themes/producktive-root/producktive-root.theme.sh"],
-        "post-install": []
-    },
-    "gnome-terminal": {
-        "requirements": [],
-        "pre-install": ["dconf load /org/gnome/terminal/legacy/profiles:/ < dotfiles/gnome-terminal-profiles.dconf"],
-        "dotfiles": [],
-        "post-install": []
-    },
-    "gnome-shell": {
-        "requirements": [],
-        "pre-install": [
-            "for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i \"['<Super>$i']\"; done",
-            "for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i \"['']\"; done",
-            "gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'",
-            "gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Bold 11'",
-            "gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed 11'",
-            "gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono 10'"
-        ],
-        "dotfiles": [],
-        "post-install": []
-    },
-
-}
 
 
 class CustomFormatter(logging.Formatter):
@@ -146,8 +53,35 @@ class DotfileInstaller:
     and backup them.
     """
 
-    def __init__(self, dictionary, dry_run=False, pkglist=[]):
-        self._dictionary = dictionary
+    class YamlLoader():
+        def __init__(self, yaml=os.path.join(working_dir, "packages.yaml")):
+            self._yaml = yaml
+            self.load()
+
+        def load(self):
+            with open(self._yaml, 'r') as stream:
+                try:
+                    self._db=yaml.safe_load(stream)
+                except yaml.YAMLError as exc:
+                    print(exc)
+
+        @property
+        def db(self):
+            return self._db
+
+        @property
+        def yaml(self):
+            return self._yaml
+
+        @yaml.setter
+        def yaml(self, var):
+            self._yaml = var
+            self._file_exists(self._yaml)
+
+    def __init__(self, dry_run=False, pkglist=[]):
+        self._yl = self.YamlLoader()
+
+        self._dictionary = self._yl.db
         self._pkglist = pkglist
 
         # create logger
@@ -328,6 +262,7 @@ class DotfileInstaller:
         """
         self._backup_all_dotfiles()
 
+from pprint import pprint
 
 def main():
     parser = argparse.ArgumentParser()
@@ -372,7 +307,7 @@ def main():
     args = parser.parse_args()
 
 
-    dots = DotfileInstaller(files, args.dry_run, args.pkglist)
+    dots = DotfileInstaller(dry_run=args.dry_run, pkglist=args.pkglist)
 
     if args.verbose:
         ch = logging.StreamHandler()

@@ -1,0 +1,87 @@
+git:
+  dotfiles:
+  - .gitignore.global
+  - .gitconfig
+  post-install: []
+  pre-install: []
+  requirements: []
+gnome-shell:
+  dotfiles: []
+  post-install: []
+  pre-install:
+  - for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i
+    "['<Super>$i']"; done
+  - for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i
+    "['']"; done
+  - gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'
+  - gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Bold
+    11'
+  - gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed
+    11'
+  - gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono
+    10'
+  requirements: []
+gnome-terminal:
+  dotfiles: []
+  post-install: []
+  pre-install:
+  - dconf load /org/gnome/terminal/legacy/profiles:/ < dotfiles/gnome-terminal-profiles.dconf
+  requirements: []
+joplin:
+  dotfiles:
+  - .config/joplin-desktop/userchrome.css
+  - .config/joplin-desktop/userstyle.css
+  post-install: []
+  pre-install: []
+  requirements:
+  - dejavu-fonts-all
+local-bin:
+  dotfiles:
+  - .local/bin/dbox-remote
+  post-install: []
+  pre-install:
+  - mkdir -p $HOME/.local/bin
+  requirements: []
+oh-my-bash:
+  dotfiles:
+  - .bashrc
+  - .aliases
+  - .environment
+  - .oh-my-bash/themes/producktive/producktive.theme.sh
+  - .oh-my-bash/themes/producktive-root/producktive-root.theme.sh
+  post-install: []
+  pre-install:
+  - bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+    --unattended
+  - mkdir -p $HOME/.oh-my-bash/themes/producktive{,-root}
+  requirements: []
+tmux:
+  dotfiles:
+  - .tmux.conf
+  - .tmux.bashrc
+  post-install:
+  - tmux source-file $HOME/.tmux.conf
+  pre-install:
+  - git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+  requirements:
+  - tmux
+vim:
+  dotfiles:
+  - .vimrc
+  post-install:
+  - vim -c 'PlugInstall' -c 'qa!'
+  - /usr/bin/python3 $HOME/.vim/plugged/YouCompleteMe/install.py --all
+  pre-install:
+  - curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  - mkdir -p $HOME/.cache/vim/{swp,bkp}
+  requirements:
+  - vim-enhanced
+  - cmake
+  - curl
+  - gcc-c++
+  - go
+  - npm
+  - python-devel
+  - python3-flake8
+  - dejavu-fonts-all
+
