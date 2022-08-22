@@ -49,8 +49,6 @@ OSH_THEME="producktive"
 # Add wisely, as too many completions slow down shell startup.
 completions=(
   git
-  composer
-  ssh
 )
 
 # Which aliases would you like to load? (aliases can be found in ~/.oh-my-bash/aliases/*)
@@ -58,7 +56,6 @@ completions=(
 # Example format: aliases=(vagrant composer git-avh)
 # Add wisely, as too many aliases slow down shell startup.
 aliases=(
-  general
 )
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-bash/plugins/*)
