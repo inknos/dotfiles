@@ -4,8 +4,8 @@
 # Directory Listing aliases
 alias dir='ls -hFx'
 alias l.='ls -d .* --color=tty' # short listing, only hidden files - .*
-alias l='ls -lthF'             # long, sort by newest to oldest
-alias L='ls -ltrhF'            # long, sort by oldest to newest
+alias l='ls -lthF'              # long, sort by newest to oldest
+alias L='ls -ltrhF'             # long, sort by oldest to newest
 alias la='ls -Al'               # show hidden files
 alias lc='ls -lcr'              # sort by change time
 alias lk='ls -lSr'              # sort by size

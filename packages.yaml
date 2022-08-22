@@ -42,7 +42,7 @@ oh-my-bash:
   - .bashrc
   - .aliases
   - .environment
-  - .oh-my-bash/custom/aliases/ls.aliases.sh
+  - .oh-my-bash/custom/ls.aliases.sh
   - .oh-my-bash/themes/producktive/producktive.theme.sh
   - .oh-my-bash/themes/producktive-root/producktive-root.theme.sh
   post-install: []
