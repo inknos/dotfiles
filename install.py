@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import difflib
 import logging
 import filecmp
 import os
@@ -14,13 +15,20 @@ working_dir = os.getcwd()
 dotfiles = os.path.join(working_dir, 'dotfiles')
 home = os.path.expanduser('~')
 
+grey_cc = "\x1b[38;20m"
+yellow_cc = "\x1b[33;20m"
+red_cc = "\x1b[31;20m"
+bold_red_cc = "\x1b[31;1m"
+green_cc = "\x1b[32;20m"
+bold_green_cc = "\x1b[32;1m"
+reset_cc = "\x1b[0m"
 
 class CustomFormatter(logging.Formatter):
-    grey = "\x1b[38;20m"
-    yellow = "\x1b[33;20m"
-    red = "\x1b[31;20m"
-    bold_red = "\x1b[31;1m"
-    reset = "\x1b[0m"
+    grey = grey_cc
+    yellow = yellow_cc
+    red = red_cc
+    bold_red = bold_red_cc
+    reset = reset_cc
     # format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
     format = "%(levelname)s: %(message)s"
 
@@ -138,8 +146,6 @@ class DotfileInstaller:
             result = filecmp.cmp(src, dst)
         except FileNotFoundError:
             result = False
-        if result:
-            self._logger.debug("DUPLICATE: {} was not copied".format(_H(dotfile)))
         return result
 
     def _install_dotfile(self, dotfile):
@@ -151,6 +157,7 @@ class DotfileInstaller:
         if not self._file_exists(src):
             return
         if self._files_are_the_same(dotfile):
+            self._logger.debug("DUPLICATE: {} was not copied".format(_H(dotfile)))
             return
         self._logger.info("CP {} -> {}".format(_H(src), _H(dst)))
         if not self._dry_run:
@@ -165,10 +172,44 @@ class DotfileInstaller:
         if not self._file_exists(src):
             return
         if self._files_are_the_same(dotfile):
+            self._logger.debug("DUPLICATE: {} was not copied".format(_H(dotfile)))
             return
         self._logger.info("CP {} -> {}".format(_H(src), _H(dst)))
         if not self._dry_run:
             shutil.copy(src, dst)
+
+    def _diff_dotfiles(self, dotfile):
+        """
+        Diff dotfiles
+        """
+        src = os.path.join(home, dotfile)
+        dst = os.path.join(dotfiles, dotfile)
+        if not self._file_exists(src):
+            return
+        if self._files_are_the_same(dotfile):
+            return
+        self._logger.debug("DIFF {}".format(dotfile))
+        with open(src) as file_1:
+            file_1_text = file_1.readlines()
+        with open(dst) as file_2:
+            file_2_text = file_2.readlines()
+        for line in difflib.unified_diff(
+                file_1_text, file_2_text, fromfile=src,
+                tofile=dst):
+            if line[:3] == "---":
+                print()
+                print(bold_red_cc + line + reset_cc, end="")
+            elif line[:3] == "+++":
+                print(bold_green_cc + line + reset_cc, end="")
+            elif line[:2] == "@@" and line[-3:-1] == "@@":
+                print(yellow_cc + line + reset_cc, end="")
+            elif line[0] == "+" and line[0] != "+++":
+                print(green_cc + line + reset_cc, end="")
+            elif line[0] == "-" and line[:3] != "---":
+                print(red_cc + line + reset_cc, end="")
+            else:
+                print(line, end="")
+
 
     def _run_command(self, command):
         """
@@ -234,6 +275,14 @@ class DotfileInstaller:
                 requirements.append(req)
         self._run_command("sudo dnf install -y " + " ".join(requirements))
 
+    def _diff_all_dotfiles(self):
+        """
+        Loop through dotfiles and diff them
+        """
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["dotfiles"]:
+                self._diff_dotfiles(dotfile)
+
     def requirements(self):
         """
         Install all requirements
@@ -264,6 +313,9 @@ class DotfileInstaller:
         """
         self._backup_all_dotfiles()
 
+    def diff(self):
+        self._diff_all_dotfiles()
+
 from pprint import pprint
 
 def main():
@@ -272,6 +324,11 @@ def main():
                         action='store_true',
                         dest='dry_run',
                         help='Perform dry-run'
+                        )
+    parser.add_argument('-D', '--diff',
+                        action='store_true',
+                        dest='diff',
+                        help='Diff dotfiles and exit'
                         )
     parser.add_argument('-r', '--requirements',
                         action='store_true',
@@ -317,6 +374,8 @@ def main():
 
     if args.backup:
         dots.backup()
+    elif args.diff:
+        dots.diff()
     elif all(v is False for v in [args.requirements, args.install, args.pre_install, args.post_install]):
         dots.requirements()
         dots.pre()
