@@ -104,7 +104,7 @@ class DotfileInstaller:
 
         self._dry_run = dry_run
         if self._dry_run:
-            self._logger.info("Running in dry-run mode")
+            self._logger.info("Run in dry-run mode")
 
         if pkglist == []:
             for key in self._dictionary:
@@ -228,7 +228,7 @@ class DotfileInstaller:
         """
         Loop through dotfiles and install them
         """
-        self._logger.info("Installing dotfiles...")
+        self._logger.info("Install dotfiles...")
         for item in self._dictionary:
             for dotfile in self._dictionary[item]["dotfiles"]:
                 self._install_dotfile(dotfile)
@@ -237,7 +237,7 @@ class DotfileInstaller:
         """
         Loop through dotfiles and backup them
         """
-        self._logger.info("Backing up dotfiles...")
+        self._logger.info("Backup dotfiles...")
         for item in self._dictionary:
             for dotfile in self._dictionary[item]["dotfiles"]:
                 self._backup_dotfile(dotfile)
