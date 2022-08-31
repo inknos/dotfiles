@@ -26,7 +26,7 @@ Plug 'airblade/vim-gitgutter'
 
 " Status bar
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline-themes'
 
 " YouCompleteMe
 Plug 'ycm-core/YouCompleteMe'
@@ -312,8 +312,8 @@ hi GitGutterDelete gui=bold guifg=darkred
 " Requires 'vim-airline/vim-airline'
 " Requires 'vim-airline/vim-airline-themes'
 
-let g:airline_theme="term"
-set noshowmode
+" let g:airline_theme="term"
+" set noshowmode
 
 " Vim Airline :end
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
@@ -400,29 +400,6 @@ let g:gruvbox_termcolors=16
 let g:gruvbox_contrast_dark='hard'
 
 colorscheme gruvbox
-" Highlight Mode
-" hi CursorLine    cterm=NONE  ctermbg=black
-" hi LineNR        cterm=NONE  ctermbg=none      ctermfg=blue
-" hi CursorLineNR  cterm=NONE  ctermbg=none      ctermfg=darkblue
-" hi Visual                    ctermbg=darkblue  ctermfg=grey
-" hi Search                    ctermbg=yellow    ctermfg=black
-" hi Pmenu                     ctermbg=darkgrey  ctermfg=white
-" hi PmenuSel                  ctermbg=black     ctermfg=grey
-" hi ColorColumn               ctermbg=darkgrey
-" hi VertSplit     cterm=NONE  ctermbg=darkgrey  ctermfg=black
-" 
-" hi Normal                    guifg=white       guibg=black
-" hi CursorLine    gui=NONE    guibg=black
-" hi LineNR        gui=NONE    guibg=NONE        guifg=blue
-" hi CursorLineNR  gui=NONE    guibg=NONE        guifg=darkblue
-" hi Visual        gui=none    guibg=darkblue    guifg=grey
-" hi Search                    guibg=yellow      guifg=black
-" hi Pmenu                     guibg=darkgrey    guifg=white
-" hi PmenuSel                  guibg=black       guifg=grey
-" hi ColorColumn               guibg=darkgrey
-" hi VertSplit     gui=NONE    guibg=darkgrey    guifg=black
-
-" Highlight line
 set cursorline
 
 " For mutt

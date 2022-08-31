@@ -21,3 +21,5 @@
         --c++-kinds=+p --fields=+iaS --extras=+q
 [merge]
     tool = vimdiff
+[init]
+	defaultBranch = main
