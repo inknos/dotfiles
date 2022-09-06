@@ -315,8 +315,6 @@ class DotfileInstaller:
     def diff(self):
         self._diff_all_dotfiles()
 
-from pprint import pprint
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dry-run',
