@@ -10,11 +10,15 @@ usage: install.py [-h] [-d] [-b] [-r] [-i] [-p] [-P]
 options:
   -h, --help          show this help message and exit
   -d, --dry-run       Perform dry-run
-  -b, --backup        Backs up files
+  -D, --diff          Diff dotfiles and exit
   -r, --requirements  Run requirement step
-  -i, --install       Run install step
   -p, --pre           Run pre-install step
+  -i, --install       Run install step
   -P, --post          Run post-install step
+  -b, --backup        Backs up files
+  -q, --quiet         Run with no output
+  -v, --verbose       Verbose mode (logger DEBUG)
+
 ```
 
 You can try the command using `-d` to performa dry run
@@ -33,5 +37,12 @@ or
 and just do the rest.
 
 Cool!
+
+
+#### I run Cron with this script (I am lazy)
+
+```
+* */2 * * * nsella nice -n 19 /home/nsella/Documents/personal_projects/dotfiles/cron.sh; EXIT_STATUS=$?; if [ $EXIT_STATUS -ne 0 ]; then notify-send -i warning -t 0 "Hey, dotfiles should be backed up." --icon=dialog-information ; fi
+```
 
 
