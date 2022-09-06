@@ -354,6 +354,11 @@ def main():
                         dest='backup',
                         help='Backs up files'
                         )
+    parser.add_argument('-q', '--quiet',
+                        action='store_true',
+                        dest='quiet',
+                        help='Run with no output'
+                        )
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         dest='verbose',
@@ -366,6 +371,8 @@ def main():
 
     if args.verbose:
         loglevel = logging.DEBUG
+    elif args.quiet:
+        loglevel =logging.WARNING
     else:
         loglevel = logging.INFO
 
