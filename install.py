@@ -86,7 +86,7 @@ class DotfileInstaller:
             self._yaml = var
             self._file_exists(self._yaml)
 
-    def __init__(self, dry_run=False, pkglist=[]):
+    def __init__(self, dry_run=False, pkglist=[], loglevel=logging.INFO):
         self._yl = self.YamlLoader()
 
         self._dictionary = self._yl.db
@@ -94,7 +94,7 @@ class DotfileInstaller:
 
         # create logger
         self._logger = logging.getLogger("dotfiles")
-        self._logger.setLevel(logging.INFO)
+        self._logger.setLevel(loglevel)
 
         # create console handler with a higher log level
         ch = logging.StreamHandler()
@@ -106,9 +106,8 @@ class DotfileInstaller:
         if self._dry_run:
             self._logger.info("Run in dry-run mode")
 
-        if pkglist == []:
-            for key in self._dictionary:
-                self._pkglist.append(key)
+        if self._pkglist != []:
+            self._dictionary = {k:v for k,v in self._dictionary.items() if k in self._pkglist}
 
     def __del__(self):
         self._logger.info("Done")
@@ -365,12 +364,16 @@ def main():
                         )
     args = parser.parse_args()
 
-
-    dots = DotfileInstaller(dry_run=args.dry_run, pkglist=args.pkglist)
-
     if args.verbose:
-        my_logger = logging.getLogger('dotfiles')
-        my_logger.setLevel(logging.DEBUG)
+        loglevel = logging.DEBUG
+    else:
+        loglevel = logging.INFO
+
+    dots = DotfileInstaller(
+        dry_run=args.dry_run,
+        pkglist=args.pkglist,
+        loglevel=loglevel
+    )
 
     if args.backup:
         dots.backup()
