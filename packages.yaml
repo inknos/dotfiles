@@ -5,6 +5,15 @@ git:
   post-install: []
   pre-install: []
   requirements: []
+wallpaper:
+  dotfiles: []
+  post-install:
+    - gsettings set org.gnome.desktop.background picture-uri '/home/nsella/.local/share/backgrounds/gnus/examples/gnus/gnus.xml'
+    - gsettings set org.gnome.desktop.background picture-uri-dark '/home/nsella/.local/share/backgrounds/gnus/examples/gnus/gnus.xml'
+  pre-install:
+    - mkdir -p ~/.local/share/backgrounds
+    - git clone --depth=1 https://gitlab.com/inknos/blockpaper.git ~/.local/share/backgrounds/gnus
+  requirements: ["git"]
 gnome-shell:
   dotfiles: []
   post-install: []
@@ -12,10 +21,10 @@ gnome-shell:
   - for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i "['<Super>$i']"; done
   - for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i "['']"; done
   - gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'
-  - gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Bold 11'
+  - gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Semi-Condensed Bold 11'
   - gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed 11'
   - gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono 10'
-  requirements: []
+  requirements: ["pop-gnome-shell-theme", "pop-gtk4-theme"]
 gnome-terminal:
   dotfiles: []
   post-install: []
