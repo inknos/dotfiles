@@ -354,12 +354,14 @@ def main():
                         dest='backup',
                         help='Backs up files'
                         )
-    parser.add_argument('-q', '--quiet',
+    verbosity_group = parser.add_mutually_exclusive_group()
+
+    verbosity_group.add_argument('-q', '--quiet',
                         action='store_true',
                         dest='quiet',
                         help='Run with no output'
                         )
-    parser.add_argument('-v', '--verbose',
+    verbosity_group.add_argument('-v', '--verbose',
                         action='store_true',
                         dest='verbose',
                         help='Verbose mode (logger DEBUG)'
