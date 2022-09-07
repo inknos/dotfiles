@@ -138,6 +138,10 @@ class DotfileInstaller:
         """
         src = os.path.join(dotfiles, file)
         dst = os.path.join(home, file)
+        if not self._file_exists(src):
+            return True
+        if not self._file_exists(dst):
+            return False
         src_t = os.path.getmtime(src)
         dst_t = os.path.getmtime(dst)
         return src_t < dst_t

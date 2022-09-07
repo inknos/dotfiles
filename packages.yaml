@@ -1,3 +1,9 @@
+cron:
+  dotfiles:
+    - .dotfiles-crontab.sh
+  post-install: []
+  pre-install: []
+  requirements: []
 git:
   dotfiles:
   - .gitignore.global
