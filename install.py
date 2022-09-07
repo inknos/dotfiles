@@ -116,9 +116,6 @@ class DotfileInstaller:
 
         self._exit = EXIT_CODE_SUCCESS
 
-    def __del__(self):
-        self._logger.info("Done")
-
     @property
     def exit(self):
         return self._exit
