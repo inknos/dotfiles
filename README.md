@@ -21,7 +21,7 @@ options:
 
 ```
 
-You can try the command using `-d` to performa dry run
+You can try the command using `-d` to perform a dry run
 
 If you run with `-b` option all the others are ignored except for `-d` (the script will NOT complain about it).
 
@@ -37,12 +37,4 @@ or
 and just do the rest.
 
 Cool!
-
-
-#### I run Cron with this script (I am lazy)
-
-```
-* */2 * * * nsella nice -n 19 /home/nsella/Documents/personal_projects/dotfiles/cron.sh; EXIT_STATUS=$?; if [ $EXIT_STATUS -ne 0 ]; then notify-send -i warning -t 0 "Hey, dotfiles should be backed up." --icon=dialog-information ; fi
-```
-
 
