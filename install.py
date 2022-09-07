@@ -23,6 +23,11 @@ green_cc = "\x1b[32;20m"
 bold_green_cc = "\x1b[32;1m"
 reset_cc = "\x1b[0m"
 
+EXIT_CODE_SUCCESS = 0
+EXIT_CODE_NOT_IN_SYNC = 10
+EXIT_CODE_LOCAL_NOT_IN_SYNC = 12
+EXIT_CODE_BACKUP_NOT_IN_SYNC = 14
+
 class CustomFormatter(logging.Formatter):
     grey = grey_cc
     yellow = yellow_cc
@@ -109,8 +114,14 @@ class DotfileInstaller:
         if self._pkglist != []:
             self._dictionary = {k:v for k,v in self._dictionary.items() if k in self._pkglist}
 
+        self._exit = EXIT_CODE_SUCCESS
+
     def __del__(self):
         self._logger.info("Done")
+
+    @property
+    def exit(self):
+        return self._exit
 
     @property
     def logger(self):
@@ -123,6 +134,16 @@ class DotfileInstaller:
     @pkglist.setter
     def pkglist(self, arg):
         self._pkglist = arg
+
+    def _local_file_is_newer(self, file):
+        """
+        Retun True if local dotfile is newer
+        """
+        src = os.path.join(dotfiles, file)
+        dst = os.path.join(home, file)
+        src_t = os.path.getmtime(src)
+        dst_t = os.path.getmtime(dst)
+        return src_t < dst_t
 
     def _file_exists(self, file):
         """
@@ -137,7 +158,6 @@ class DotfileInstaller:
     def _files_are_the_same(self, dotfile):
         """
         Return False if file differ or one file does not exist
-        Return True if files are the same and log it
         """
         src = os.path.join(home, dotfile)
         dst = os.path.join(dotfiles, dotfile)
@@ -274,6 +294,29 @@ class DotfileInstaller:
                 requirements.append(req)
         self._run_command("sudo dnf install -y " + " ".join(requirements))
 
+    def _check_all_files(self):
+        """
+        Check all file dates and return the correct exit code
+        """
+        exit_code_local_not_in_sync_t = False
+        exit_code_backup_not_in_sync_t = False
+        for item in self._dictionary:
+            for dotfile in self._dictionary[item]["dotfiles"]:
+                if self._files_are_the_same(dotfile):
+                    continue
+                if self._local_file_is_newer(dotfile):
+                    self._logger.debug("Local version of {} is newer".format(dotfile))
+                    exit_code_local_not_in_sync_t = True
+                else:
+                    self._logger.debug("Backup version of {} is newer".format(dotfile))
+                    exit_code_backup_not_in_sync_t = True
+        if exit_code_local_not_in_sync_t and exit_code_backup_not_in_sync_t:
+            self._exit = EXIT_CODE_NOT_IN_SYNC
+        elif exit_code_local_not_in_sync_t:
+            self._exit = EXIT_CODE_LOCAL_NOT_IN_SYNC
+        elif exit_code_backup_not_in_sync_t:
+            self._exit = EXIT_CODE_BACKUP_NOT_IN_SYNC
+
     def _diff_all_dotfiles(self):
         """
         Loop through dotfiles and diff them
@@ -312,11 +355,24 @@ class DotfileInstaller:
         """
         self._backup_all_dotfiles()
 
+    def check(self):
+        """
+        Check if files need to be updated
+        return 10 if local files are out of date
+        return 12 if backup files are out of date
+        """
+        self._check_all_files()
+
     def diff(self):
         self._diff_all_dotfiles()
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--check',
+                        action='store_true',
+                        dest='check',
+                        help='Check if dotfiles need to be updated'
+                        )
     parser.add_argument('-d', '--dry-run',
                         action='store_true',
                         dest='dry_run',
@@ -384,6 +440,8 @@ def main():
 
     if args.backup:
         dots.backup()
+    elif args.check:
+        dots.check()
     elif args.diff:
         dots.diff()
     elif all(v is False for v in [args.requirements, args.install, args.pre_install, args.post_install]):
@@ -401,6 +459,7 @@ def main():
         if args.post_install:
             dots.post()
 
+    exit(dots.exit)
 
 if __name__ == "__main__":
     main()
