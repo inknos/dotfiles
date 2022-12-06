@@ -25,6 +25,7 @@ gnome-shell:
   post-install: []
   pre-install:
   - for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i "['<Super>$i']"; done
+  - for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-$i "['<Super><Shift>$i']"; done
   - for i in {1..9}; do gsettings set org.gnome.shell.keybindings switch-to-application-$i "['']"; done
   - gsettings set org.gnome.desktop.interface font-name 'DejaVu Sans 11'
   - gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Semi-Condensed Bold 11'
@@ -42,7 +43,8 @@ joplin:
   - .config/joplin-desktop/userchrome.css
   - .config/joplin-desktop/userstyle.css
   post-install: []
-  pre-install: []
+  pre-install:
+    - mkdir -p .config/joplin-desktop
   requirements:
   - dejavu-fonts-all
 local-bin:
