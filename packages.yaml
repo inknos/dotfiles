@@ -31,7 +31,15 @@ gnome-shell:
   - gsettings set org.gnome.desktop.wm.preferences titlebar-font 'DejaVu Sans Semi-Condensed Bold 11'
   - gsettings set org.gnome.desktop.interface document-font-name 'DejaVu Sans Semi-Condensed 11'
   - gsettings set org.gnome.desktop.interface monospace-font-name 'DejaVu SansMono 10'
-  requirements: ["pop-gnome-shell-theme", "pop-gtk4-theme"]
+  requirements: [
+    "gnome-shell-extension-appindicator",
+    "gnome-shell-extension-auto-move-windows",
+    "gnome-shell-extension-blur-my-shell",
+    "gnome-shell-extension-caffeine",
+    "gnome-shell-extension-gsconnect",
+    "nautilus-gsconnect",
+    "webextension-gsconnect",
+    ]
 gnome-terminal:
   dotfiles: []
   post-install: []

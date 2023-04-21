@@ -69,6 +69,7 @@ class DotfileInstaller:
     class YamlLoader():
         def __init__(self, yaml=os.path.join(working_dir, "packages.yaml")):
             self._yaml = yaml
+            self._db = {}
             self.load()
 
         def load(self):
@@ -293,7 +294,10 @@ class DotfileInstaller:
         for item in self._dictionary:
             for req in self._dictionary[item]["requirements"]:
                 requirements.append(req)
-        self._run_command("sudo dnf install -y " + " ".join(requirements))
+        if requirements == []:
+            self._logger.info("Requirements list is empty")
+        self._logger.debug("Requirements list:", requirements)
+        self._run_command("sudo dnf5 install -y " + " ".join(requirements))
 
     def _check_all_files(self):
         """
