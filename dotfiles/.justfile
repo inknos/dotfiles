@@ -126,7 +126,7 @@ dbox-vscode-workspace:
         "folders": [
     EOT
     for file in `find $(pwd -P) -mindepth 1 -maxdepth 1 -type d -not -name '.*'`; do
-        if [ $(git -C $file rev-parse --quiet &> /dev/null) ]; then
+        if [ ! $(git -C ./$file rev-parse --quiet &> /dev/null) ]; then
             echo "        {" >> $WORKSPACE_FILENAME
             echo "            \"path\": \"$file\"," >> $WORKSPACE_FILENAME
             echo "        }," >> $WORKSPACE_FILENAME
