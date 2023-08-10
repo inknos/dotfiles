@@ -63,8 +63,7 @@ just:
   requirements:
   - just
 local-bin:
-  dotfiles:
-  - .local/bin/dbox-remote
+  dotfiles: []
   post-install: []
   pre-install:
   - mkdir -p $HOME/.local/bin

@@ -111,3 +111,4 @@ source ~/.tmux.bashrc
 function prevdir() {
     basename $(dirname $(pwd))
 }
+

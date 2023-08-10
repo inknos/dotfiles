@@ -10,6 +10,8 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export BROWSER=firefox
 
+export HISTIGNORE=$HISTIGNORE:history*:h:hg:hgi:hl
+
 # path export
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"

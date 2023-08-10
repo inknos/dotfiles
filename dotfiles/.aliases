@@ -11,7 +11,7 @@ alias ls='ls --color=auto'
 alias c='clear'
 
 # grep with colors
-alias grep='grep --color --exclude-dir=~/.{cache,.local/share/containers} --exclude=tags'
+alias grep='grep --color --exclude-dir=~/.{cache,local/share/containers} --exclude=tags'
 alias grepn='grep -n --color'
 
 # change dirs
@@ -30,6 +30,7 @@ alias .5='cd ../../../../..'
 alias h='history'
 alias hg='history | grep'
 alias hgi='history | grep -i'
+alias hl='history | less'
 
 # create dirs
 alias mkdir='mkdir -pv'
@@ -52,6 +53,10 @@ alias tl='tldr'
 alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 
 alias socks='ssh -D 1337 -v -C -N'
+
+# better-discord
+# https://github.com/BetterDiscord/Installer/issues/26
+alias betterdiscord-update="DISC_CONFIG=\"\$HOME/.var/app/com.discordapp.Discord/config/discord\" && BD_ASAR=betterdiscord.asar && wget --timestamping -P \"\${DISC_CONFIG}/../BetterDiscord/data\" -- \"https://github.com/BetterDiscord/BetterDiscord/releases/latest/download/\${BD_ASAR}\" && DISC_VER=\"\$(ls --sort=time --time=creation \"\${DISC_CONFIG}\" | grep -E -m 1 '^[0-9]+\\.[0-9]+\\.[0-9]+\$')\" && echo -e \"require('../../../../BetterDiscord/data/\${BD_ASAR}');\\nmodule.exports = require('./core.asar');\" | tee \"\${DISC_CONFIG}/\${DISC_VER}/modules/discord_desktop_core/index.js\" && echo -e \"\\nBetterDiscord installed. Restart Discord if currently running.\" || echo -e \"\\nInstallation failed.\""
 
 # global justfiles for stuff
 alias gust='just --justfile ~/.justfile --working-directory .'

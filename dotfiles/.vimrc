@@ -31,6 +31,9 @@ Plug 'vim-airline/vim-airline'
 " YouCompleteMe
 Plug 'ycm-core/YouCompleteMe'
 
+" Ale: linter
+" Plug 'dense-analysis/ale'
+
 " Whitespace check
 Plug 'ntpeters/vim-better-whitespace'
 
@@ -350,6 +353,15 @@ let g:ycm_enable_diagnostic_highlighting = 0
 " YouCompleteMe :end
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+"
+"                YouCompleteMe
+" :begin
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+let b:ale_fixers = ['black']
+
+" YouCompleteMe :end
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 "
