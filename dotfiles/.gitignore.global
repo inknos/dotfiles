@@ -21,3 +21,6 @@ tags
 !tags/
 # Persistent undo
 [._]*.un~
+
+# just
+_just_*

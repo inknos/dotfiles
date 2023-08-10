@@ -55,6 +55,13 @@ joplin:
     - mkdir -p .config/joplin-desktop
   requirements:
   - dejavu-fonts-all
+just:
+  dotfiles:
+  - .justfile
+  post-install: []
+  pre-install: []
+  requirements:
+  - just
 local-bin:
   dotfiles:
   - .local/bin/dbox-remote
