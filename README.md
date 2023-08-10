@@ -36,5 +36,17 @@ or
 ```
 and just do the rest.
 
+### Common examples
+
+Backup dotfiles to the git directory (dry-run enabled to avoid `ctrl+C`, `ctrl+V` mistakes)
+```
+./install.py -db
+```
+
+Install dotfiles in the system (dry-run enabled to avoid `ctrl+C`, `ctrl+V` mistakes)
+```
+./install.py -di
+```
+
 Cool!
 
