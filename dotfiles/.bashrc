@@ -112,3 +112,4 @@ function prevdir() {
     basename $(dirname $(pwd))
 }
 
+. "$HOME/.cargo/env"
