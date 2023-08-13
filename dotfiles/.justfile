@@ -20,10 +20,10 @@ dbox-git-commit-template:
 
     DIRS=`find . -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*'`
     for D in $DIRS; do
-        pushd $D &> /dev/null
+        pushd $D 2>&1 > /dev/null
 
         # always exit if not a git directory
-        if [ ! $(git -c $(pwd)/$(basename $D) rev-parse --quiet &> /dev/null) ]; then
+        if [ $(git -C . rev-parse --quiet 2>&1 > /dev/null) ]; then
             echo "info : omitting `basename $D`. Not a git dir."
             continue
         fi
@@ -34,7 +34,7 @@ dbox-git-commit-template:
         else
             echo "info : no file named .git-commit-template in `basename $D`"
         fi
-        popd &> /dev/null
+        popd 2>&1 > /dev/null
     done
 
 dbox-git-pre-commit-install:
@@ -47,21 +47,21 @@ dbox-git-pre-commit-install:
 
     DIRS=`find . -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*'`
     for D in $DIRS; do
-        pushd $D &> /dev/null
+        pushd $D 2>&1 > /dev/null
 
         # always exit if not a git directory
-        if [ ! $(git -c $(pwd)/$(basename $D) rev-parse --quiet &> /dev/null) ]; then
+        if [ $(git -C . rev-parse --quiet 2>&1 > /dev/null) ]; then
             echo "info : omitting `basename $D`. Not a git dir."
             continue
         fi
 
         if [ -f .pre-commit-config.yaml ]; then
             echo "info : installing pre-commit in `basename $D`"
-            pre-commit install &> /dev/null
+            pre-commit install 1> /dev/null
         else
             echo "info : no pre-commit file found in `basename $D`"
         fi
-        popd &> /dev/null
+        popd 2>&1 > /dev/null
     done
 
 dbox-git-remote-rename-origin-upstream:
@@ -74,10 +74,10 @@ dbox-git-remote-rename-origin-upstream:
 
     DIRS=`find . -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*'`
     for D in $DIRS; do
-        pushd $D &> /dev/null
+        pushd $D 2>&1 > /dev/null
 
         # always exit if not a git directory
-        if [ ! $(git -c $(pwd)/$(basename $D) rev-parse --quiet &> /dev/null) ]; then
+        if [ $(git -C . rev-parse --quiet 2>&1 > /dev/null) ]; then
             echo "info : omitting `basename $D`. Not a git dir."
             continue
         fi
@@ -87,8 +87,8 @@ dbox-git-remote-rename-origin-upstream:
         GH_USER=inknos
         GH_URL=https://github.com/$GH_USER/$GH_REPO
         if [ $(curl -s -o /dev/null -I -w "%{http_code}" $GH_URL) -eq "200" ]; then
-            if [ git ls-remote --exit-code upstream &> /dev/null ]; then
-                if git remote rename origin upstream &> /dev/null; then
+            if [ ! $(git rev-parse --verify upstream 2>&1 > /dev/null) ]; then
+                if git remote rename origin upstream 2>&1 > /dev/null; then
                     git remote add origin \
                         $(git remote -v | grep upstream | awk 'END {print $2}' | sed 's|.*/|git@github.com:inknos/|')
                     git fetch origin  2>&1 > /dev/null
@@ -100,7 +100,7 @@ dbox-git-remote-rename-origin-upstream:
         else
             echo "error: remote $GH_URL unreachable"
         fi
-        popd &> /dev/null
+        popd 2>&1 > /dev/null
     done
 
 dbox-vscode-workspace:
@@ -126,7 +126,7 @@ dbox-vscode-workspace:
         "folders": [
     EOT
     for file in `find $(pwd -P) -mindepth 1 -maxdepth 1 -type d -not -name '.*'`; do
-        if [ ! $(git -C ./$file rev-parse --quiet &> /dev/null) ]; then
+        if [ ! $(git -C ./$file rev-parse --quiet 2>&1 > /dev/null) ]; then
             echo "        {" >> $WORKSPACE_FILENAME
             echo "            \"path\": \"$file\"," >> $WORKSPACE_FILENAME
             echo "        }," >> $WORKSPACE_FILENAME
