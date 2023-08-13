@@ -36,7 +36,9 @@ gnome-shell:
     "gnome-shell-extension-auto-move-windows",
     "gnome-shell-extension-blur-my-shell",
     "gnome-shell-extension-caffeine",
+    "gnome-shell-extension-common",
     "gnome-shell-extension-gsconnect",
+    "gnome-shell-extension-user-theme",
     "nautilus-gsconnect",
     "webextension-gsconnect",
     ]
