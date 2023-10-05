@@ -72,8 +72,10 @@ local-bin:
   requirements: []
 oh-my-bash:
   dotfiles:
-  - .bashrc
   - .aliases
+  - .bash_logout
+  - .bash_profile
+  - .bashrc
   - .environment
   - .profile
   - .oh-my-bash/custom/ls.aliases.sh
