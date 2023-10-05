@@ -75,6 +75,7 @@ oh-my-bash:
   - .bashrc
   - .aliases
   - .environment
+  - .profile
   - .oh-my-bash/custom/ls.aliases.sh
   - .oh-my-bash/themes/producktive/producktive.theme.sh
   - .oh-my-bash/themes/producktive-root/producktive-root.theme.sh
