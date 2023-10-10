@@ -87,7 +87,7 @@ dbox-git-remote-rename-origin-upstream:
         GH_USER=inknos
         GH_URL=https://github.com/$GH_USER/$GH_REPO
         if [ $(curl -s -o /dev/null -I -w "%{http_code}" $GH_URL) -eq "200" ]; then
-            if [ ! $(git rev-parse --verify upstream 2>&1 > /dev/null) ]; then
+            if [ ! $(git rev-parse -q --verify upstream 2>&1 > /dev/null) ]; then
                 if git remote rename origin upstream 2>&1 > /dev/null; then
                     git remote add origin \
                         $(git remote -v | grep upstream | awk 'END {print $2}' | sed 's|.*/|git@github.com:inknos/|')
@@ -115,6 +115,7 @@ dbox-vscode-workspace:
     BASENAME=`basename $INVOCATION_DIR`
     WORKSPACE_FILENAME=$BASENAME.code-workspace
 
+    # check if workspace already exist
     if [ -f $WORKSPACE_FILENAME ]; then
         echo "info : file $WORKSPACE_FILENAME exists"
         exit
@@ -126,7 +127,8 @@ dbox-vscode-workspace:
         "folders": [
     EOT
     for file in `find $(pwd -P) -mindepth 1 -maxdepth 1 -type d -not -name '.*'`; do
-        if [ ! $(git -C ./$file rev-parse --quiet 2>&1 > /dev/null) ]; then
+        echo $file
+        if [ ! $(git -C $file rev-parse --quiet 2>&1 > /dev/null) ]; then
             echo "        {" >> $WORKSPACE_FILENAME
             echo "            \"path\": \"$file\"," >> $WORKSPACE_FILENAME
             echo "        }," >> $WORKSPACE_FILENAME
