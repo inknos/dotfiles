@@ -5,7 +5,12 @@ function my_git_prompt() {
   STATUS=""
 
   # is branch ahead?
-  if $(echo "$(git log origin/$(git_current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
+  BRANCH=origin
+  # if upstream exist, track upstream
+  if [[ $(git remote -v | grep -w upstream 2> /dev/null) ]]; then
+      BRANCH="upstream"
+  fi
+  if $(echo "$(git log $BRANCH/$(git_current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
     STATUS="$STATUS$GIT_PROMPT_AHEAD"
   fi
 
