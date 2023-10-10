@@ -48,15 +48,6 @@ gnome-terminal:
   pre-install:
   - dconf load /org/gnome/terminal/legacy/profiles:/ < dotfiles/gnome-terminal-profiles.dconf
   requirements: []
-joplin:
-  dotfiles:
-  - .config/joplin-desktop/userchrome.css
-  - .config/joplin-desktop/userstyle.css
-  post-install: []
-  pre-install:
-    - mkdir -p .config/joplin-desktop
-  requirements:
-  - dejavu-fonts-all
 just:
   dotfiles:
   - .justfile
