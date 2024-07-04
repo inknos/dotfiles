@@ -58,6 +58,13 @@ function virtual_env() {
   fi
 }
 
+function container_env() {
+  if [ -z ${container+x} ]; then
+    echo ""
+  else echo "${bold_blue}[$container]${normal} ";
+  fi
+}
+
 function working_dir() {
 
 MPATH=$PWD
@@ -112,7 +119,7 @@ function prompt_command(){
     ret_status="${bold_green}🦆${normal}"
   fi
 
-  export PS1="${ret_status} ${normal}$(my_git_prompt)$(virtual_env)$(ssh_connection)\n${normal}${bold_green}$USER@$HOSTNAME:${bold_blue}$(working_dir)${normal}\$ "
+  export PS1="${ret_status} ${normal}$(my_git_prompt)$(container_env)$(virtual_env)$(ssh_connection)\n${normal}${bold_green}$USER@$HOSTNAME:${bold_blue}$(working_dir)${normal}\$ "
 }
 
 safe_append_prompt_command prompt_command

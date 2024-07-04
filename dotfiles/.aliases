@@ -10,6 +10,9 @@ alias ls='ls --color=auto'
 # clear screen
 alias c='clear'
 
+# alias vgrep
+alias vv='vgrep'
+
 # grep with colors
 alias grep='grep --color --exclude-dir=~/.{cache,local/share/containers} --exclude=tags'
 alias grepn='grep -n --color'
@@ -31,6 +34,9 @@ alias h='history'
 alias hg='history | grep'
 alias hgi='history | grep -i'
 alias hl='history | less'
+# delete last lines in history
+alias hd5='history -d -5--1'
+alias hd10='history -d -10--1'
 
 # create dirs
 alias mkdir='mkdir -pv'
@@ -38,9 +44,6 @@ mcd () {
     mkdir -p $1
     cd $1
 }
-
-# bat aliases
-alias bat='bat --theme ansi-dark -n'
 
 # search through aliases
 alias ggaa='alias | grep'

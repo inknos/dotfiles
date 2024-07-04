@@ -9,6 +9,7 @@ dbox:
     just dbox-git-pre-commit-install
     just dbox-git-remote-rename-origin-upstream
     just dbox-vscode-workspace
+    just dbox-emacs-projectile
 
 dbox-git-commit-template:
     #!/usr/bin/env sh
@@ -102,6 +103,15 @@ dbox-git-remote-rename-origin-upstream:
         fi
         popd 2>&1 > /dev/null
     done
+
+dbox-emacs-projectile:
+    #!/usr/bin/env sh
+
+    # this line is needed because calling just tasks
+    # resets the path to ~ and I didn't find a better way to
+    # set it
+    cd {{ invocation_directory() }}
+    touch .projectile
 
 dbox-vscode-workspace:
     #!/usr/bin/env sh

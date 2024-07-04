@@ -28,3 +28,7 @@ _just_*
 # vscode files
 .vscode
 settings.json
+
+# python virtual envs (venv, virtualenv, etc.)
+venv/
+venv-testing/

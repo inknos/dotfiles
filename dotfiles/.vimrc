@@ -26,13 +26,9 @@ Plug 'airblade/vim-gitgutter'
 
 " Status bar
 Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
 
 " YouCompleteMe
 Plug 'ycm-core/YouCompleteMe'
-
-" Ale: linter
-" Plug 'dense-analysis/ale'
 
 " Whitespace check
 Plug 'ntpeters/vim-better-whitespace'
@@ -40,20 +36,11 @@ Plug 'ntpeters/vim-better-whitespace'
 " File tree on side
 Plug 'scrooloose/nerdtree'
 
-Plug 'morhetz/gruvbox'
-" Surround brachets automatically
-" Plug 'tpope/vim-surround'
-
-" Vim Wiki
-" Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
-
-" Siver searcher and Vim-Zettel
-" Plug 'junegunn/fzf'
-" Plug 'junegunn/fzf.vim'
-" Plug 'michal-h21/vim-zettel'
+" Catppuccin theme
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " LaTeX for Vim
-Plug 'lervag/vimtex'
+" Plug 'lervag/vimtex'
 
 " Python linter
 Plug 'nvie/vim-flake8'
@@ -65,32 +52,18 @@ Plug 'rhysd/vim-clang-format'
 " search recursively in directories
 Plug 'mileszs/ack.vim'
 
-" Vim Markdown
-Plug 'gabrielelana/vim-markdown'
-
 " FZF
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-" Unused plugins
+" Copilot
+Plug 'github/copilot.vim'
 
-" Encrypt vim wiki
-" Plug 'jamessan/vim-gnupg'
+" Ale
+Plug 'dense-analysis/ale'
 
-" git plugin
-" Plug 'tpope/vim-fugitive'
-
-" Advanced UNIX commands
-" Plug 'tpope/vim-eunuch'
-
-" Advanced terminal
-" Plug 'wincent/terminus'
-
-" Wrap comments
-" Plug 'preservim/nerdcommenter'
-
-" TaskWarrior
-" Plug 'blindFS/vim-taskwarrior'
+" Vimspector
+Plug 'puremourning/vimspector'
 
 " End of Plug
 " Initialize plugin system
@@ -99,7 +72,8 @@ call plug#end()
 " Plugins :end
 " :--:--:--:--:--:--:--:--:--:--:--:--:--:--:--:
 
-
+colorscheme catppuccin_mocha
+set termguicolors
 
 " :--:--:--:--:--:--:--:--:--:--:--:--:--:--:--:
 "
@@ -112,95 +86,18 @@ call plug#end()
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 "
-"                  VimWiki
-" :begin:unused
+"                Copilot
+" :begin
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
-" set nocompatible
-" filetype plugin on
-" syntax on
-"
-" let g:vimwiki_links_space_char = '_'
-" let g:vimwiki_auto_header = 1
-" let g:vimwiki_list = [{ 'path': '~/Documents/VimWiki/text',
-"             \ 'template_path': '~/Documents/VimWiki/templates/',
-"             \ 'auto_tag': 1,
-"             \ 'auto_toc': 1,
-"             \ 'template_default': 'default',
-"             \ 'syntax': 'markdown', 'ext': '.md',
-"             \'custom_wiki2html': 'vimwiki_markdown',
-"             \ 'html_filename_parameterization': 1,
-"             \ 'path_html': '~/Documents/VimWiki/html/',
-"             \ 'template_ext': '.tpl'}]
-" let g:vimwiki_auto_chdir = 1
-" let g:vimwiki_hl_headers=1
-"
-" Vim-Zettel options
-" let g:zettel_options = [{"front_matter" : {"tags" : ""},
-"             \ "template" :  "~Documents/Vimwiki/templates/zettel.tpl"}]
-" let g:zettel_format = '%Y%m%d%H%M%S'
-"
-" Zettel search
-" inoremap [[ [[<esc>:ZettelSearch<CR>
-" imap <silent> [[ [[<esc><Plug>ZettelSearchMap
-"
-" Zettel copy link
-" nmap T <Plug>ZettelYankNameMap
-"
-" Create note with selected text
-" xnoremap z :call zettel#vimwiki#zettel_new_selected()<CR>
-" xmap z <Plug>ZettelNewSelectedMap
-"
-" Additional Mappings for Vimwiki
-"
-"       <leader>v...
-"
-" Check Vimwiki backlinks
-" nnoremap <leader>vb :VimwikiBacklinks<CR>
-"
-" Check orphan Links
-" nnoremap <leader>vc :VimwikiCheckLinks<CR>
-"
-" Text Search
-" nnoremap <leader>vs :VimwikiSearch<space>
-"
-" Tag Search
-" nnoremap <leader>vt :VimwikiSearchTags<space>
-"
-" Mappings for Vimwiki without v
-"
-" This mapping runs two Vimwiki functions that keep the Vimwiki
-" tags file up-to-date and generates an index by tag of file
-" links in the index.wiki file.
-" nnoremap <leader>gt :VimwikiRebuildTags!<cr>:VimwikiGenerateTagLinks<cr><c-l>
-"
-" This one is useful when you want to know what zettels link
-" to the current one. It opens a window split with a list of those files.
-" nnoremap <leader>bl :VimwikiBacklinks<cr>
-"
-" Mappings for Zettel
-"
-"       <leader>z...
-"
-" This mapping and the even more convenient [[ insert mode mapping
-" let you search for existing notes to insert as a link to the current file.
-" nnoremap <leader>zl :ZettelSearch<cr>
-"
-" <leader>zn creates a new zettel based on the template
-" we defined earlier named with a unique zettel ID.
-" nnoremap <leader>zn :ZettelNew<cr><cr>:4d<cr>:w<cr>ggA
-" nnoremap <leader>zn :ZettelNew<CR>
+" Disable Copilot for files larger than 100kb
+autocmd BufReadPre *
+    \ let f=getfsize(expand("<afile>"))
+    \ | if f > 100000 || f == -2
+    \ | let b:copilot_enabled = v:false
+    \ | endif
 
-" GPG
-" Encryption Vimwiki
-"
-" GPG wiki (does not work-ish)
-" let g:GPGFilePattern = '*.\(gpg\|asc\|pgp\)\(.wiki\)\='
-
-
-" VimWiki :end
-" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-
+" Copilot :end
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 "
@@ -221,7 +118,7 @@ let g:vimtex_view_method = 'zathura'
 "
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
-let $FZF_DEFAULT_OPTS='--layout=reverse'
+let $FZF_DEFAULT_OPTS='--ansi --phony'
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Normal'],
@@ -254,9 +151,10 @@ command! FZFTags
     \   'sink':    'tag',
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
-nmap <leader><leader> :FZFBuffers<CR>
-nmap <leader>ff :FZF<CR>
-nmap <leader>fs :FZFTags<CR>
+nmap <leader><leader> :RG<CR>
+nmap <leader>b :FZFBuffers<CR>
+nmap <leader>f :FZF<CR>
+nmap <leader>t :FZFTags<CR>
 
 " FZF : end
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
@@ -315,10 +213,19 @@ hi GitGutterDelete gui=bold guifg=darkred
 " Requires 'vim-airline/vim-airline'
 " Requires 'vim-airline/vim-airline-themes'
 
-" let g:airline_theme="term"
-" set noshowmode
+let g:airline_theme = 'catppuccin_mocha'
+set noshowmode
 
 " Vim Airline :end
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+
+
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+"
+"            Catppuccin Theme
+" :begin
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+" Catppuccin Theme :end
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
 
@@ -355,12 +262,22 @@ let g:ycm_enable_diagnostic_highlighting = 0
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 "
-"                YouCompleteMe
+"                     Ale
 " :begin
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-let b:ale_fixers = ['black']
+let b:ale_fixers = ['black', 'ruff']
+let b:ale_linters = ['pyright']
 
-" YouCompleteMe :end
+" Ale :end
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+"
+"                Vimspector
+" :begin
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+let g:vimspector_enable_mappings = 'HUMAN'
+" Vimspector :end
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
@@ -394,33 +311,6 @@ endif
 "         General Config aka Must Have
 " :begin
 " :--:--:--:--:--:--:--:--:--:--:--:--:--:--:--:
-" This is supposed to work everywhere
-" Minimal vim config to feel home
-
-" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-"
-"               Colors
-" :begin
-" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-
-" set bg=dark
-set termguicolors
-set background=dark
-set t_Co=16
-"let g:gruvbox_italic=1
-let g:gruvbox_termcolors=16
-let g:gruvbox_contrast_dark='hard'
-
-colorscheme gruvbox
-set cursorline
-
-" For mutt
-" au BufRead /tmp/mutt-* set tw=72
-" au BufRead $HOME_CACHE_DIR/tmp/mutt-* set tw=72
-
-" Colors :end
-" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-
 
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 "
@@ -430,6 +320,7 @@ set cursorline
 
 " Line number relative
 set number relativenumber
+highlight LineNr ctermfg=grey
 
 " Line number absolute in insert mode
 augroup numbertoggle
@@ -487,9 +378,6 @@ set expandtab       " Expand TABs to spaces
 "               Visual Effects
 " :begin
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
-
-" Flash if error
-set visualbell
 
 " auto close completion window
 au CompleteDone * pclose
@@ -590,6 +478,17 @@ map <F8> :ClangFormat<CR>
 " ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
 
 
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+"
+"              Filetype Rebinds
+" :begin
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+
+
+" Filetype Rebinds :end
+" ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~
+
+autocmd BufEnter *.fmf :setlocal filetype=yaml
 " General Config aka Must Have :end
 " :--:--:--:--:--:--:--:--:--:--:--:--:--:--:--:
 

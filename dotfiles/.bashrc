@@ -47,9 +47,7 @@ OSH_THEME="producktive"
 # Custom completions may be added to ~/.oh-my-bash/custom/completions/
 # Example format: completions=(ssh git bundler gem pip pip3)
 # Add wisely, as too many completions slow down shell startup.
-completions=(
-  git
-)
+completions=()
 
 # Which aliases would you like to load? (aliases can be found in ~/.oh-my-bash/aliases/*)
 # Custom aliases may be added to ~/.oh-my-bash/custom/aliases/
@@ -113,3 +111,11 @@ function prevdir() {
 }
 
 . "$HOME/.cargo/env"
+
+vgrep() {
+  INITIAL_QUERY="$1"
+  VGREP_PREFIX="vgrep --no-header "
+  FZF_DEFAULT_COMMAND="$VGREP_PREFIX '$INITIAL_QUERY'" \
+  fzf --bind "change:reload:$VGREP_PREFIX {q} || true" --ansi --phony --tac --query "$INITIAL_QUERY" \
+  | awk '{print $1}' | xargs -I{} -o vgrep --show {}
+}
